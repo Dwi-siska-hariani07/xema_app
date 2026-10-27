@@ -12,7 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  google_fonts: ^9.0.0 # Library untuk font Poppins dan Adamia
+  google_fonts: ^9.0.0 # Library untuk font Poppins, Adamia, Poltawski Nowy, Roboto Slab
+  flutter_svg: ^2.0.17
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +25,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Mendaftarkan folder gambar agar bisa digunakan di dalam aplikasi
+  # Mendaftarkan folder gambar dan ikon agar bisa digunakan di dalam aplikasi
   assets:
     - assets/images/
+    - assets/icons/

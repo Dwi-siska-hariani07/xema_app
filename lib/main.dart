@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'onboarding_screen.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +13,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Xema App',
-      home: OnboardingScreen(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF772096),
+          primary: const Color(0xFF772096),
+        ),
+      ),
+      home: const SplashScreen(),
     );
   }
 }
