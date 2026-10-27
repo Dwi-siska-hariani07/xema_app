@@ -1,0 +1,28 @@
+name: xema_app
+description: "Aplikasi Dompet Digital Xema"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+# Daftar library tambahan yang digunakan
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^9.0.0 # Library untuk font Poppins dan Adamia
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# Pengaturan aset dan font Flutter
+flutter:
+  uses-material-design: true
+
+  # Mendaftarkan folder gambar agar bisa digunakan di dalam aplikasi
+  assets:
+    - assets/images/
