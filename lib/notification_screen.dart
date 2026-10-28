@@ -192,3 +192,4 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
     );
   }
 }
+

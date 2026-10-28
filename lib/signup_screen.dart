@@ -57,17 +57,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    // Skala proporsional kanvas Figma (393 x 852)
-    final scaleY = size.height / 852.0;
-    final scaleX = size.width / 393.0;
+    // Mengunci resolusi kanvas presisi Figma 393 x 852 (Pixel-Perfect)
+    const scaleY = 1.0;
+    const scaleX = 1.0;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: Stack(
+      body: Center(
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: SizedBox(
+            width: 393,
+            height: 852,
+            child: Stack(
           clipBehavior: Clip.none,
           children: [
             // ============================================================
@@ -381,6 +383,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ],
         ),
       ),
+    ),
+    ),
     );
   }
 
