@@ -7,118 +7,111 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mengunci resolusi kanvas presisi Figma 393 x 852 (Pixel-Perfect)
     return Scaffold(
       backgroundColor: const Color(0xFF1C0823),
-      body: Center(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: SizedBox(
-            width: 393,
-            height: 852,
-            child: Stack(
-              clipBehavior: Clip.none,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenHeight = constraints.maxHeight;
+            // Menghitung ukuran ilustrasi agar selalu pas dan tidak terpotong di emulator mana pun
+            final illustrationHeight = (screenHeight * 0.44).clamp(260.0, 420.0);
+
+            return Stack(
               children: [
-                // 1. Elemen Bintang (stars.png)
+                // 1. Elemen Bintang di bagian atas kanvas
                 Positioned(
-                  top: -5.69,
+                  top: 0,
                   left: 0,
                   right: 0,
                   child: Image.asset(
                     'assets/images/stars.png',
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => const SizedBox(),
                   ),
                 ),
 
-                // 2. Ilustrasi Utama HP & Tangan (group_277.png)
-                Positioned(
-                  top: 237,
-                  left: (393 - 380.87) / 2,
-                  width: 380.87,
-                  height: 424.63,
-                  child: Image.asset(
-                    'assets/images/group_277.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-
-                // 3. Teks "xema" (Y = 616, Poppins Bold 40, Warna #EAD6D6)
-                Positioned(
-                  top: 616,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      'xema',
-                      style: GoogleFonts.poppins(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFEAD6D6),
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // 4. Teks "Solusi dompet..." (Y = 696, Adamina Regular 12)
-                Positioned(
-                  top: 696,
-                  left: 20,
-                  right: 20,
-                  child: Center(
-                    child: Text(
-                      'Solusi dompet digital modern untuk mengatur keuangan\ndan transaksi harianmu dengan lebih cepat dan aman',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.adamina(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: const Color(0xFFFFFFFF),
-                        height: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // 5. Tombol "Lanjut" (Y = 777, W = 72, H = 28, Radius = 8)
-                Positioned(
-                  top: 777,
-                  left: (393 - 72) / 2,
-                  width: 72,
-                  height: 28,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFCA31FF),
-                      foregroundColor: const Color(0xFFFFFFFF),
-                      elevation: 0,
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Lanjut',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFFFFFFFF),
+                // 2. Konten Utama: Ilustrasi, Teks, & Tombol
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      // Ilustrasi Utama HP & Tangan 3D (group_277.png)
+                      SizedBox(
+                        height: illustrationHeight,
+                        child: Center(
+                          child: Image.asset(
+                            'assets/images/group_277.png',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 12),
+
+                      // Teks "xema" (Poppins Bold 40, #EAD6D6 resmi Figma)
+                      Text(
+                        'xema',
+                        style: GoogleFonts.poppins(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFEAD6D6),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Teks Informasi Deskripsi (Adamina 12, #FFFFFF resmi Figma)
+                      Text(
+                        'Solusi dompet digital modern untuk mengatur keuangan\ndan transaksi harianmu dengan lebih cepat dan aman',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.adamina(
+                          fontSize: 12,
+                          color: const Color(0xFFFFFFFF),
+                          height: 1.6,
+                        ),
+                      ),
+
+                      const Spacer(),
+
+                      // Tombol "Lanjut" (Figma: #CA31FF, Radius 8, Poppins Bold 12)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 24),
+                        width: 80,
+                        height: 32,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFCA31FF),
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Lanjut',
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
