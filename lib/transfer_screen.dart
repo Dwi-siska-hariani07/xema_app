@@ -969,130 +969,156 @@ class _TransferScreenState extends State<TransferScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  topRight: Radius.circular(32),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 44,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  void onDigit(String d) {
+                    if (pin.length < 6) {
+                      setModalState(() => pin += d);
+                      if (pin.length == 6) {
+                        Navigator.pop(context);
+                        setState(() => _currentStep = 4);
+                      }
+                    }
+                  }
 
-                  Container(
-                    width: 50,
-                    height: 50,
+                  // Keypad PIN 3-Kolom Sesuai Desain Figma Asli
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                     decoration: const BoxDecoration(
-                      color: Color(0xFFF3D8FF),
-                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(32),
+                        topRight: Radius.circular(32),
+                      ),
                     ),
-                    child: const Icon(Icons.lock_outline_rounded, color: Color(0xFF52086B), size: 26),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Text(
-                    'Konfirmasi PIN',
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF52086B),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Masukkan 6-digit PIN Transaksi kamu',
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 14,
-                      color: const Color(0xFF570374),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 6 Titik PIN Indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(6, (idx) {
-                      final isFilled = idx < pin.length;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        width: 18,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isFilled ? const Color(0xFFCA31FF) : const Color(0xFFF3D8FF),
-                          border: Border.all(
-                            color: isFilled ? const Color(0xFF52086B) : const Color(0xFFCA31FF),
-                            width: 1.5,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                      );
-                    }),
-                  ),
+                        const SizedBox(height: 16),
 
-                  const SizedBox(height: 16),
-                  Text(
-                    'Lupa PIN?',
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFFCA31FF),
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF3D8FF),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.lock_outline_rounded, color: Color(0xFF52086B), size: 26),
+                        ),
+                        const SizedBox(height: 12),
+
+                        Text(
+                          'Konfirmasi PIN',
+                          style: GoogleFonts.robotoSlab(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF52086B),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Masukkan 6-digit PIN Transaksi kamu',
+                          style: GoogleFonts.robotoSlab(
+                            fontSize: 14,
+                            color: const Color(0xFF570374),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // 6 Titik PIN Indicator
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(6, (idx) {
+                            final isFilled = idx < pin.length;
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              width: 18,
+                              height: 18,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isFilled ? const Color(0xFFCA31FF) : const Color(0xFFF3D8FF),
+                                border: Border.all(
+                                  color: isFilled ? const Color(0xFF52086B) : const Color(0xFFCA31FF),
+                                  width: 1.5,
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+
+                        const SizedBox(height: 16),
+                        Text(
+                          'Lupa PIN?',
+                          style: GoogleFonts.robotoSlab(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFFCA31FF),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Keypad PIN 3-Kolom Sesuai Desain Figma Asli
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildPinKey('1', () => onDigit('1')),
+                                _buildPinKey('2', () => onDigit('2')),
+                                _buildPinKey('3', () => onDigit('3')),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildPinKey('4', () => onDigit('4')),
+                                _buildPinKey('5', () => onDigit('5')),
+                                _buildPinKey('6', () => onDigit('6')),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildPinKey('7', () => onDigit('7')),
+                                _buildPinKey('8', () => onDigit('8')),
+                                _buildPinKey('9', () => onDigit('9')),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const SizedBox(width: 70, height: 60), // Spacer kosong kiri
+                                _buildPinKey('0', () => onDigit('0')),
+                                SizedBox(
+                                  width: 70,
+                                  height: 60,
+                                  child: IconButton(
+                                    iconSize: 28,
+                                    icon: const Icon(Icons.backspace_outlined, color: Color(0xFF52086B)),
+                                    onPressed: () {
+                                      if (pin.isNotEmpty) {
+                                        setModalState(() => pin = pin.substring(0, pin.length - 1));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Keypad PIN (Font Rasa untuk digit PIN sesuai Figma)
-                  Wrap(
-                    spacing: 24,
-                    runSpacing: 14,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      for (var i = 1; i <= 9; i++)
-                        _buildPinKey(i.toString(), () {
-                          if (pin.length < 6) {
-                            setModalState(() => pin += i.toString());
-                            if (pin.length == 6) {
-                              Navigator.pop(context);
-                              setState(() => _currentStep = 4); // Ke Resi Bukti
-                            }
-                          }
-                        }),
-                      const SizedBox(width: 65, height: 60),
-                      _buildPinKey('0', () {
-                        if (pin.length < 6) {
-                          setModalState(() => pin += '0');
-                          if (pin.length == 6) {
-                            Navigator.pop(context);
-                            setState(() => _currentStep = 4);
-                          }
-                        }
-                      }),
-                      IconButton(
-                        iconSize: 28,
-                        icon: const Icon(Icons.backspace_outlined, color: Color(0xFF52086B)),
-                        onPressed: () {
-                          if (pin.isNotEmpty) {
-                            setModalState(() => pin = pin.substring(0, pin.length - 1));
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+                  );
           },
         );
       },
