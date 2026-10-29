@@ -73,11 +73,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
+      body: SizedBox(
+        width: size.width,
+        height: size.height,
         child: FittedBox(
-          fit: BoxFit.contain,
+          fit: BoxFit.fill,
           alignment: Alignment.center,
           child: SizedBox(
             // Mengunci kanvas presisi 100% Figma node #40:114 (393 x 852)
@@ -176,10 +180,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // =============================================================
                 // 6. FOOTER: "Already have an account? Log in" (Group #391:537)
-                // Diposisikan presisi di atas kurva ungu (Top: 672, persis referensi)
+                // Diposisikan presisi di atas kurva ungu (Top: 668, persis referensi)
                 // =============================================================
                 Positioned(
-                  top: 672,
+                  top: 668,
                   left: 0,
                   right: 0,
                   child: Center(
