@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +11,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // Menghilangkan banner debug
+      debugShowCheckedModeBanner: false,
       title: 'Xema App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFC040FB)),
-        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF772096),
+          primary: const Color(0xFF772096),
+        ),
       ),
-      // Titik awal aplikasi dimulai dari Splash Screen!
       home: const SplashScreen(),
     );
   }
