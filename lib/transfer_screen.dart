@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,181 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
+  // Support Input Keyboard Fisik Laptop / PC
+  bool _isPinOpen = false;
+  Function(String)? _pinOnDigit;
+  VoidCallback? _pinOnDelete;
+  bool _isKonfirmasiOpen = false;
+  VoidCallback? _konfirmasiOnSubmit;
+
+  @override
+  void initState() {
+    super.initState();
+    // Handler untuk menangkap ketikan keyboard laptop secara otomatis
+    HardwareKeyboard.instance.addHandler(_handleHardwareKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
+    super.dispose();
+  }
+
+  bool _handleHardwareKey(KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return false;
+    }
+
+    final key = event.logicalKey;
+    final char = event.character;
+
+    // Backspace / Delete
+    if (key == LogicalKeyboardKey.backspace || key == LogicalKeyboardKey.delete) {
+      _handleHardwareDelete();
+      return true;
+    }
+
+    // Enter / Numpad Enter (Lanjutkan / Konfirmasi / OK)
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.numpadEnter) {
+      _handleHardwareSubmit();
+      return true;
+    }
+
+    // Koma ','
+    if (key == LogicalKeyboardKey.comma || char == ',') {
+      _handleHardwareDigit(',');
+      return true;
+    }
+
+    // Titik '.'
+    if (key == LogicalKeyboardKey.period || key == LogicalKeyboardKey.numpadDecimal || char == '.') {
+      _handleHardwareDigit('.');
+      return true;
+    }
+
+    // Minus '-'
+    if (key == LogicalKeyboardKey.minus || key == LogicalKeyboardKey.numpadSubtract || char == '-') {
+      _handleHardwareDigit('-');
+      return true;
+    }
+
+    // Angka 0 - 9 dari karakter
+    if (char != null && RegExp(r'^[0-9]$').hasMatch(char)) {
+      _handleHardwareDigit(char);
+      return true;
+    }
+
+    // Angka 0 - 9 dari LogicalKeyboardKey
+    if (key == LogicalKeyboardKey.digit0 || key == LogicalKeyboardKey.numpad0) {
+      _handleHardwareDigit('0');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit1 || key == LogicalKeyboardKey.numpad1) {
+      _handleHardwareDigit('1');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit2 || key == LogicalKeyboardKey.numpad2) {
+      _handleHardwareDigit('2');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit3 || key == LogicalKeyboardKey.numpad3) {
+      _handleHardwareDigit('3');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit4 || key == LogicalKeyboardKey.numpad4) {
+      _handleHardwareDigit('4');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit5 || key == LogicalKeyboardKey.numpad5) {
+      _handleHardwareDigit('5');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit6 || key == LogicalKeyboardKey.numpad6) {
+      _handleHardwareDigit('6');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit7 || key == LogicalKeyboardKey.numpad7) {
+      _handleHardwareDigit('7');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit8 || key == LogicalKeyboardKey.numpad8) {
+      _handleHardwareDigit('8');
+      return true;
+    }
+    if (key == LogicalKeyboardKey.digit9 || key == LogicalKeyboardKey.numpad9) {
+      _handleHardwareDigit('9');
+      return true;
+    }
+
+    return false;
+  }
+
+  void _handleHardwareDigit(String digit) {
+    if (_isPinOpen) {
+      _pinOnDigit?.call(digit);
+      return;
+    }
+
+    if (_currentStep == 1) {
+      final intVal = int.tryParse(digit);
+      if (intVal != null && intVal >= 1 && intVal <= _popularBanks.length) {
+        _selectBank(_popularBanks[intVal - 1]);
+      }
+    } else if (_currentStep == 2) {
+      if (_inputAccountNumber.length < 20) {
+        setState(() => _inputAccountNumber += digit);
+      }
+    } else if (_currentStep == 3) {
+      if (digit == '.' || digit == ',' || digit == '-') return;
+      if (_amount.length < 9) {
+        setState(() => _amount += digit);
+      }
+    }
+  }
+
+  void _handleHardwareDelete() {
+    if (_isPinOpen) {
+      _pinOnDelete?.call();
+      return;
+    }
+
+    if (_currentStep == 2) {
+      if (_inputAccountNumber.isNotEmpty) {
+        setState(() => _inputAccountNumber =
+            _inputAccountNumber.substring(0, _inputAccountNumber.length - 1));
+      }
+    } else if (_currentStep == 3) {
+      if (_amount.isNotEmpty) {
+        setState(() => _amount = _amount.substring(0, _amount.length - 1));
+      }
+    }
+  }
+
+  void _handleHardwareSubmit() {
+    if (_isPinOpen) return;
+
+    if (_isKonfirmasiOpen) {
+      _konfirmasiOnSubmit?.call();
+      return;
+    }
+
+    if (_currentStep == 2) {
+      if (_inputAccountNumber.isEmpty) {
+        _inputAccountNumber = _selectedBankCode;
+      }
+      setState(() => _currentStep = 3);
+    } else if (_currentStep == 3) {
+      if (_amount.isEmpty || int.tryParse(_amount) == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Masukkan nominal transfer terlebih dahulu')),
+        );
+        return;
+      }
+      _showKonfirmasiTransferSheet();
+    } else if (_currentStep == 4) {
+      setState(() => _currentStep = 1);
+    }
+  }
   // Navigation Flow State:
   // 1: Pilih Bank (Figma #103:296)
   // 2: Input No Rekening per Bank (Figma #246:49)
@@ -960,7 +1136,7 @@ class _TransferScreenState extends State<TransferScreen> {
               _buildFigmaKey('1', () => onDigit('1')),
               _buildFigmaKey('2', () => onDigit('2')),
               _buildFigmaKey('3', () => onDigit('3')),
-              _buildFigmaKey('-', () {}),
+              _buildFigmaKey('-', () => onDigit('-')),
             ],
           ),
           const SizedBox(height: 8),
@@ -970,7 +1146,7 @@ class _TransferScreenState extends State<TransferScreen> {
               _buildFigmaKey('4', () => onDigit('4')),
               _buildFigmaKey('5', () => onDigit('5')),
               _buildFigmaKey('6', () => onDigit('6')),
-              _buildFigmaKey('_', () {}),
+              _buildFigmaKey('_', () => onDigit('_')),
             ],
           ),
           const SizedBox(height: 8),
@@ -987,10 +1163,10 @@ class _TransferScreenState extends State<TransferScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildFigmaKey("'", () {}),
+              _buildFigmaKey(',', () => onDigit(',')),
               _buildFigmaKey('0', () => onDigit('0')),
-              _buildFigmaKey('.', () {}),
               _buildFigmaKey('ok', onSubmit, icon: Icons.check),
+              _buildFigmaKey('.', () => onDigit('.')),
             ],
           ),
           const SizedBox(height: 4),
@@ -1036,6 +1212,12 @@ class _TransferScreenState extends State<TransferScreen> {
   void _showKonfirmasiTransferSheet() {
     final displayAccount =
         _inputAccountNumber.isEmpty ? _selectedBankCode : _inputAccountNumber;
+
+    _isKonfirmasiOpen = true;
+    _konfirmasiOnSubmit = () {
+      Navigator.pop(context);
+      _showPinBottomSheet();
+    };
 
     showModalBottomSheet(
       context: context,
@@ -1177,7 +1359,10 @@ class _TransferScreenState extends State<TransferScreen> {
           ),
         );
       },
-    );
+    ).whenComplete(() {
+      _isKonfirmasiOpen = false;
+      _konfirmasiOnSubmit = null;
+    });
   }
 
   Widget _buildKonfirmasiRow(String label, String value, {bool isBold = false}) {
@@ -1217,6 +1402,8 @@ class _TransferScreenState extends State<TransferScreen> {
   // =========================================================================
   void _showPinBottomSheet() {
     String pin = '';
+    _isPinOpen = true;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1233,6 +1420,13 @@ class _TransferScreenState extends State<TransferScreen> {
                 }
               }
             }
+
+            _pinOnDigit = onDigit;
+            _pinOnDelete = () {
+              if (pin.isNotEmpty) {
+                setModalState(() => pin = pin.substring(0, pin.length - 1));
+              }
+            };
 
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -1394,7 +1588,11 @@ class _TransferScreenState extends State<TransferScreen> {
           },
         );
       },
-    );
+    ).whenComplete(() {
+      _isPinOpen = false;
+      _pinOnDigit = null;
+      _pinOnDelete = null;
+    });
   }
 
   Widget _buildPinKey(String num, VoidCallback onTap) {
