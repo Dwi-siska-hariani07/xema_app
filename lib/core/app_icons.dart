@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 /// Kelas terpusat untuk seluruh asset ikon aplikasi XEMA
 /// Menggabungkan ikon custom Figma & ikon bawaan agar rapi dan mudah dirawat.
 class AppIcons {
+  // Grid Button Assets (Figma Frame #103:296 Official Layer Buttons)
+  static const String btnGridBas = '/btn_grid_bas.png';
+  static const String btnGridBri = '/btn_grid_bri.png';
+  static const String btnGridBsi = '/btn_grid_bsi.png';
+  static const String btnGridBni = '/btn_grid_bni.png';
+  static const String btnGridBtn = '/btn_grid_btn.png';
+  static const String btnGridMandiri = '/btn_grid_mandiri.png';
+  static const String btnGridBca = '/btn_grid_bca.png';
+  static const String btnGridSeaBank = '/btn_grid_seabank.png';
+
+  // Bank List Official Logos
+  static const String bankListLogo0 = '/bank_list_logo_0.png';
+  static const String bankListLogo1 = '/bank_list_logo_1.png';
+  static const String bankListLogo2 = '/bank_list_logo_2.png';
+  static const String bankListLogo3 = '/bank_list_logo_3.png';
+  static const String bankListLogo4 = '/bank_list_logo_4.png';
+  static const String bankListLogo5 = '/bank_list_logo_5.png';
+  static const String bankListLogo6 = '/bank_list_logo_6.png';
+  static const String bankListLogo7 = '/bank_list_logo_7.png';
+
   // Asset path folder
   static const String _iconsPath = 'assets/icons';
   static const String _imagesPath = 'assets/images';
@@ -14,6 +34,7 @@ class AppIcons {
   static const String icPinKey = '$_iconsPath/ic_pin_key.png';
   static const String icReceiptCheck = '$_iconsPath/ic_receipt_check.png';
   static const String icKonfUser = '$_iconsPath/ic_konf_user.png';
+  static const String icSumberUser = '$_iconsPath/ic_sumber_user.png';
   static const String popperArt = '$_iconsPath/popper_art.png';
 
   // Bank Logos (Figma Official Assets)
