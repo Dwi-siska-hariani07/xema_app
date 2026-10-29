@@ -66,6 +66,12 @@ class _TransferScreenState extends State<TransferScreen> {
       return true;
     }
 
+    // Space ' '
+    if (key == LogicalKeyboardKey.space || char == ' ') {
+      _handleHardwareDigit(' ');
+      return true;
+    }
+
     // Minus '-'
     if (key == LogicalKeyboardKey.minus || key == LogicalKeyboardKey.numpadSubtract || char == '-') {
       _handleHardwareDigit('-');
@@ -1146,7 +1152,21 @@ class _TransferScreenState extends State<TransferScreen> {
               _buildFigmaKey('4', () => onDigit('4')),
               _buildFigmaKey('5', () => onDigit('5')),
               _buildFigmaKey('6', () => onDigit('6')),
-              _buildFigmaKey('_', () => onDigit('_')),
+              _buildFigmaKey(
+                'space',
+                () => onDigit(' '),
+                customChild: Container(
+                  width: 26,
+                  height: 9,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.black, width: 2.6),
+                      left: BorderSide(color: Colors.black, width: 2.6),
+                      right: BorderSide(color: Colors.black, width: 2.6),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -1165,8 +1185,8 @@ class _TransferScreenState extends State<TransferScreen> {
             children: [
               _buildFigmaKey(',', () => onDigit(',')),
               _buildFigmaKey('0', () => onDigit('0')),
-              _buildFigmaKey('ok', onSubmit, icon: Icons.check),
               _buildFigmaKey('.', () => onDigit('.')),
+              _buildFigmaKey('ok', onSubmit, icon: Icons.check),
             ],
           ),
           const SizedBox(height: 4),
@@ -1175,7 +1195,12 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  Widget _buildFigmaKey(String label, VoidCallback onTap, {IconData? icon}) {
+  Widget _buildFigmaKey(
+    String label,
+    VoidCallback onTap, {
+    IconData? icon,
+    Widget? customChild,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
@@ -1187,16 +1212,17 @@ class _TransferScreenState extends State<TransferScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
-          child: icon != null
-              ? Icon(icon, color: Colors.black, size: 22)
-              : Text(
-                  label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
+          child: customChild ??
+              (icon != null
+                  ? Icon(icon, color: Colors.black, size: 22)
+                  : Text(
+                      label,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    )),
         ),
       ),
     );
