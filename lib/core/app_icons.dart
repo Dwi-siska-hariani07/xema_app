@@ -24,6 +24,24 @@ class AppIcons {
   static const String logoPermata = '$_imagesPath/logo_permata.png';
   static const String logoCimb = '$_imagesPath/logo_cimb.png';
 
+  // Regional Bank Logos (Figma Frame 103:296 Official Assets)
+  static const String logoBankAceh = '$_imagesPath/logo_bank_aceh.png';
+  static const String logoBankBanten = '$_imagesPath/logo_bank_banten.png';
+  static const String logoBankBengkulu = '$_imagesPath/logo_bank_bengkulu.png';
+  static const String logoBankBjb = '$_imagesPath/logo_bank_bjb.png';
+  static const String logoBankJambi = '$_imagesPath/logo_bank_jambi.png';
+  static const String logoBankJateng = '$_imagesPath/logo_bank_jateng.png';
+  static const String logoBankJatim = '$_imagesPath/logo_bank_jatim.png';
+  static const String logoBankKalbar = '$_imagesPath/logo_bank_kalbar.png';
+  static const String logoBankKalsel = '$_imagesPath/logo_bank_kalsel.png';
+  static const String logoBankLampung = '$_imagesPath/logo_bank_lampung.png';
+  static const String logoBankMaluku = '$_imagesPath/logo_bank_maluku.png';
+  static const String logoBankNtt = '$_imagesPath/logo_bank_ntt.png';
+  static const String logoBankPapua = '$_imagesPath/logo_bank_papua.png';
+  static const String logoBankBali = '$_imagesPath/logo_bank_bali.png';
+  static const String logoBankSulteng = '$_imagesPath/logo_bank_sulteng.png';
+  static const String logoBankSumut = '$_imagesPath/logo_bank_sumut.png';
+
   // Retail Logos (Figma Official Assets)
   static const String logoIndomaret = '$_imagesPath/logo_indomaret.png';
   static const String logoAlfamart = '$_imagesPath/logo_alfamart.png';
