@@ -11,6 +11,9 @@ class AppIcons {
   static const String avatarRecipient = '$_iconsPath/avatar_recipient.png';
   static const String icSuccessTick = '$_iconsPath/ic_success_tick.png';
   static const String icShare = '$_iconsPath/ic_share.png';
+  static const String icPinKey = '$_iconsPath/ic_pin_key.png';
+  static const String icReceiptCheck = '$_iconsPath/ic_receipt_check.png';
+  static const String icKonfUser = '$_iconsPath/ic_konf_user.png';
 
   // Bank Logos (Figma Official Assets)
   static const String logoBca = '$_imagesPath/logo_bca.png';
