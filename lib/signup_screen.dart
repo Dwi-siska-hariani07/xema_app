@@ -88,35 +88,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 // =============================================================
                 // 1. LATAR BELAKANG ASLI FIGMA (Kubah Atas + Lengkungan Bawah)
-                // Diekspor langsung dari Figma node #40:114 dengan Layer Blur 4
+                // Diekspor langsung secara presisi 1:1 dari node Figma
                 // =============================================================
                 Positioned.fill(
                   child: Image.asset(
-                    'assets/images/signup_bg_clean.png',
+                    'assets/images/figma_signup_bg_perfect.png',
                     fit: BoxFit.fill,
                   ),
                 ),
 
                 // =============================================================
-                // 2. LOGO DOMPET & TEKS "Xema" ASLI FIGMA (Group #391:538)
-                // Posisi presisi Figma: top: 60, persis di tengah kubah atas
-                // =============================================================
-                Positioned(
-                  top: 60,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/signup_logo_clean.png',
-                      width: 210,
-                      height: 92,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-
-                // =============================================================
-                // 3. JUDUL: "Sign up" (Figma node #40:120)
+                // 2. JUDUL: "Sign up" (Figma node #40:120)
                 // Posisi presisi Figma: top: 275, left: 48
                 // Font: Pochaevsk 32, Warna: #570374
                 // =============================================================
@@ -134,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 // =============================================================
-                // 4. KOTAK 1: Phone number (Figma Group #391:536)
+                // 3. KOTAK 1: Phone number (Figma Group #391:536)
                 // Posisi presisi Figma: top: 340, width: 326, height: 55, radius: 25
                 // =============================================================
                 Positioned(
@@ -149,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 // =============================================================
-                // 5. KOTAK 2: Password (Figma Group #391:535)
+                // 4. KOTAK 2: Password (Figma Group #391:535)
                 // Posisi presisi Figma: top: 423, width: 326, height: 55, radius: 25
                 // =============================================================
                 Positioned(
@@ -171,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 // =============================================================
-                // 6. KOTAK 3: Re enter password (Figma Group #391:534)
+                // 5. KOTAK 3: Re enter password (Figma Group #391:534)
                 // Posisi presisi Figma: top: 506, width: 326, height: 55, radius: 25
                 // =============================================================
                 Positioned(
@@ -193,11 +175,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 // =============================================================
-                // 7. FOOTER TUNGGAL: "Already have an account? Log in" (Group #391:537)
-                // Posisi presisi Figma: top: 716, Center X (Satu-satunya, tanpa dobel)
+                // 6. FOOTER: "Already have an account? Log in" (Group #391:537)
+                // Diposisikan presisi di atas kurva ungu (Top: 672, persis referensi)
                 // =============================================================
                 Positioned(
-                  top: 716,
+                  top: 672,
                   left: 0,
                   right: 0,
                   child: Center(
