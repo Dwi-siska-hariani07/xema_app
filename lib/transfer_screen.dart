@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'core/app_icons.dart';
 
 class TransferScreen extends StatefulWidget {
   final bool isEwallet;
@@ -11,50 +12,54 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
-  // Step navigation:
-  // 1: Pilih Bank / Tujuan Transfer (Figma 103:296 & 152:856)
-  // 2: Input Nominal & Rekening Sumber (Figma 558:975)
-  // 3: Resi Bukti Transaksi Sukses (Figma 403:1048)
+  // Navigation Flow State:
+  // 1: Pilih Bank (Figma #103:296)
+  // 2: Input No Rekening per Bank (Figma #246:49 & #553:251)
+  // 3: Tujuan Transfer & Input Nominal (Figma #152:856 & #558:975)
+  // 4: Resi Bukti Transaksi Sukses (Figma #403:1048)
   int _currentStep = 1;
 
-  // Form State
+  // Selected Bank Details (Dynamically reflects whichever bank was tapped)
   String _selectedBankName = 'BSI';
-  final String _selectedBankCode = '7243567687';
+  String _selectedBankCode = '7243567687';
+  String _selectedBankLogo = AppIcons.logoBsi;
+  String _inputAccountNumber = '';
   final String _recipientName = 'Zavella Meica';
   String _amount = '100000';
+
   final String _userSenderName = 'LISA ARUNIA';
   final String _userSenderPhone = '0851 2343 5656';
   final String _userBalance = '300.000,00';
 
-  // Bank List for Grid & List
-  final List<Map<String, dynamic>> _popularBanks = [
-    {'name': 'MANDIRI', 'fullName': 'Bank Mandiri', 'color': Color(0xFF003D79)},
-    {'name': 'BSI', 'fullName': 'Bank Syariah Indonesia (BSI)', 'color': Color(0xFF00A39D)},
-    {'name': 'BTN', 'fullName': 'Bank BTN', 'color': Color(0xFF002D62)},
-    {'name': 'BNI', 'fullName': 'Bank Negara Indonesia (BNI)', 'color': Color(0xFFF37021)},
-    {'name': 'BCA', 'fullName': 'Bank Central Asia (BCA)', 'color': Color(0xFF005EAA)},
-    {'name': 'BRI', 'fullName': 'Bank Rakyat Indonesia (BRI)', 'color': Color(0xFF00529C)},
-    {'name': 'BAS', 'fullName': 'Bank Aceh Syariah', 'color': Color(0xFF006F3C)},
-    {'name': 'SeaBank', 'fullName': 'SeaBank Indonesia', 'color': Color(0xFFF05A28)},
+  // Bank Data Definition with distinct logo and default account numbers
+  final List<Map<String, String>> _popularBanks = [
+    {'name': 'MANDIRI', 'fullName': 'BANK MANDIRI', 'acc': '1370019283748', 'logo': AppIcons.logoMandiri},
+    {'name': 'BSI', 'fullName': 'BANK BSI', 'acc': '7243567687', 'logo': AppIcons.logoBsi},
+    {'name': 'BTN', 'fullName': 'BANK BTN', 'acc': '0001827364501', 'logo': AppIcons.logoBtn},
+    {'name': 'BNI', 'fullName': 'BANK BNI', 'acc': '0981726354', 'logo': AppIcons.logoBni},
+    {'name': 'BCA', 'fullName': 'BANK BCA', 'acc': '8801928374', 'logo': AppIcons.logoBca},
+    {'name': 'BRI', 'fullName': 'BANK BRI', 'acc': '0019018273645', 'logo': AppIcons.logoBri},
+    {'name': 'BAS', 'fullName': 'BANK ACEH SYARIAH', 'acc': '5018273645', 'logo': AppIcons.logoBas},
+    {'name': 'SeaBank', 'fullName': 'BANK SEABANK', 'acc': '9018273645', 'logo': AppIcons.logoSeaBank},
   ];
 
-  final List<String> _regionalBanks = [
-    'Bank Aceh Syariah',
-    'Bank Banten',
-    'Bank Bengkulu',
-    'Bank Jabar & Banten (BJB)',
-    'Bank Jambi',
-    'Bank Jateng',
-    'Bank Jatim',
-    'Bank Kalbar',
-    'Bank Kalsel',
-    'Bank Lampung',
-    'Bank Maluku Malut',
-    'Bank NTT',
-    'Bank Papua',
-    'Bank Pembangunan Daerah Bali',
-    'Bank Sulteng',
-    'Bank Sumut',
+  final List<Map<String, String>> _regionalBanks = [
+    {'name': 'Bank Aceh Syariah', 'fullName': 'BANK ACEH SYARIAH', 'acc': '5018273645', 'logo': AppIcons.logoBas},
+    {'name': 'Bank Banten', 'fullName': 'BANK BANTEN', 'acc': '1382910283', 'logo': AppIcons.logoBtn},
+    {'name': 'Bank Bengkulu', 'fullName': 'BANK BENGKULU', 'acc': '1482910284', 'logo': AppIcons.logoBri},
+    {'name': 'Bank Jabar & Banten (BJB)', 'fullName': 'BANK BJB', 'acc': '1102910285', 'logo': AppIcons.logoBni},
+    {'name': 'Bank Jambi', 'fullName': 'BANK JAMBI', 'acc': '1582910286', 'logo': AppIcons.logoMandiri},
+    {'name': 'Bank Jateng', 'fullName': 'BANK JATENG', 'acc': '1682910287', 'logo': AppIcons.logoBri},
+    {'name': 'Bank Jatim', 'fullName': 'BANK JATIM', 'acc': '1782910288', 'logo': AppIcons.logoBca},
+    {'name': 'Bank Kalbar', 'fullName': 'BANK KALBAR', 'acc': '1882910289', 'logo': AppIcons.logoMandiri},
+    {'name': 'Bank Kalsel', 'fullName': 'BANK KALSEL', 'acc': '1982910290', 'logo': AppIcons.logoBni},
+    {'name': 'Bank Lampung', 'fullName': 'BANK LAMPUNG', 'acc': '2082910291', 'logo': AppIcons.logoBri},
+    {'name': 'Bank Maluku Malut', 'fullName': 'BANK MALUKU MALUT', 'acc': '2182910292', 'logo': AppIcons.logoBtn},
+    {'name': 'Bank NTT', 'fullName': 'BANK NTT', 'acc': '2282910293', 'logo': AppIcons.logoBri},
+    {'name': 'Bank Papua', 'fullName': 'BANK PAPUA', 'acc': '2382910294', 'logo': AppIcons.logoMandiri},
+    {'name': 'Bank Pembangunan Daerah Bali', 'fullName': 'BANK BPD BALI', 'acc': '2482910295', 'logo': AppIcons.logoBca},
+    {'name': 'Bank Sulteng', 'fullName': 'BANK SULTENG', 'acc': '2582910296', 'logo': AppIcons.logoBni},
+    {'name': 'Bank Sumut', 'fullName': 'BANK SUMUT', 'acc': '2682910297', 'logo': AppIcons.logoBri},
   ];
 
   String _formatCurrency(String rawNumber) {
@@ -67,23 +72,29 @@ class _TransferScreenState extends State<TransferScreen> {
     }
   }
 
+  void _selectBank(Map<String, String> bank) {
+    setState(() {
+      _selectedBankName = bank['name']!;
+      _selectedBankCode = bank['acc']!;
+      _selectedBankLogo = bank['logo']!;
+      _inputAccountNumber = '';
+      _currentStep = 2; // Pindah ke Frame Input No Rekening Bank Terpilih
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildFigmaHeader(),
+      appBar: _buildCustomNavbar(),
       body: SafeArea(
-        child: _buildCurrentStepView(),
+        child: _buildBody(),
       ),
     );
   }
 
-  // ==================== HEADER UNGU FIGMA (#D373FC) ====================
-  PreferredSizeWidget _buildFigmaHeader() {
-    String titleText = 'Transfer';
-    if (_currentStep == 2) titleText = 'Tujuan Transfer';
-    if (_currentStep == 3) titleText = 'Bukti Transaksi';
-
+  // ==================== NAVBAR FIGMA DENGAN ATURAN FONT ====================
+  PreferredSizeWidget _buildCustomNavbar() {
     return PreferredSize(
       preferredSize: const Size.fromHeight(65),
       child: Container(
@@ -105,6 +116,8 @@ class _TransferScreenState extends State<TransferScreen> {
                     if (_currentStep == 2) {
                       setState(() => _currentStep = 1);
                     } else if (_currentStep == 3) {
+                      setState(() => _currentStep = 2);
+                    } else if (_currentStep == 4) {
                       Navigator.pop(context);
                     } else {
                       Navigator.pop(context);
@@ -112,17 +125,32 @@ class _TransferScreenState extends State<TransferScreen> {
                   },
                 ),
                 Expanded(
-                  child: Text(
-                    titleText,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF52086B),
-                    ),
+                  child: Center(
+                    child: _currentStep == 3
+                        // Aturan User: "tujuan transfer" WAJIB FONT RASA
+                        ? Text(
+                            'Tujuan Transfer',
+                            style: GoogleFonts.rasa(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF52086B),
+                            ),
+                          )
+                        : Text(
+                            _currentStep == 1
+                                ? 'Transfer'
+                                : _currentStep == 2
+                                    ? 'BANK $_selectedBankName'
+                                    : 'Bukti Transaksi',
+                            style: GoogleFonts.robotoSlab(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF52086B),
+                            ),
+                          ),
                   ),
                 ),
-                const SizedBox(width: 48), // Balance spacing with back button
+                const SizedBox(width: 48), // Spacer penyeimbang tombol back
               ],
             ),
           ),
@@ -131,30 +159,31 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  Widget _buildCurrentStepView() {
+  Widget _buildBody() {
     switch (_currentStep) {
       case 1:
-        return _buildSelectBankStep();
+        return _buildPilihBankView();
       case 2:
-        return _buildInputNominalStep();
+        return _buildInputNoRekeningView();
       case 3:
-        return _buildReceiptStep();
+        return _buildTujuanTransferNominalView();
+      case 4:
+        return _buildResiBuktiView();
       default:
-        return _buildSelectBankStep();
+        return _buildPilihBankView();
     }
   }
 
   // =========================================================================
-  // STEP 1: PILIH BANK / TUJUAN TRANSFER (FIGMA FRAME #103:296)
+  // FRAME 1: PILIH SEMUA BANK (FIGMA FRAME #103:296)
   // =========================================================================
-  Widget _buildSelectBankStep() {
+  Widget _buildPilihBankView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section: Semua Bank Header
           Text(
             'Semua Bank',
             style: GoogleFonts.robotoSlab(
@@ -165,32 +194,28 @@ class _TransferScreenState extends State<TransferScreen> {
           ),
           const SizedBox(height: 14),
 
-          // Grid 8 Bank Populer (Mandiri, BSI, BTN, BNI, BCA, BRI, BAS, SeaBank)
+          // Grid Bank Populer dengan Logo Asli dari Folder assets/images/
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _popularBanks.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
-              crossAxisSpacing: 12,
+              crossAxisSpacing: 10,
               mainAxisSpacing: 12,
               childAspectRatio: 0.85,
             ),
             itemBuilder: (context, index) {
               final bank = _popularBanks[index];
               return InkWell(
-                onTap: () {
-                  setState(() {
-                    _selectedBankName = bank['name'];
-                    _currentStep = 2;
-                  });
-                },
+                onTap: () => _selectBank(bank),
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.04),
@@ -202,28 +227,20 @@ class _TransferScreenState extends State<TransferScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: (bank['color'] as Color).withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
-                        ),
+                      SizedBox(
+                        width: 38,
+                        height: 38,
                         child: Center(
-                          child: Icon(
-                            Icons.account_balance,
-                            color: bank['color'] as Color,
-                            size: 22,
-                          ),
+                          child: AppIcons.buildImageOrIcon(bank['logo']!),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Text(
-                        bank['name'],
+                        bank['name']!,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.robotoSlab(
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           color: Colors.black,
                         ),
                       ),
@@ -238,7 +255,7 @@ class _TransferScreenState extends State<TransferScreen> {
           const Divider(color: Color(0xFFE5E5E5), thickness: 1),
           const SizedBox(height: 12),
 
-          // Daftar Bank Daerah / Bank Lainnya
+          // Daftar Bank Daerah
           Text(
             'Daftar Bank Daerah & Lainnya',
             style: GoogleFonts.robotoSlab(
@@ -255,7 +272,7 @@ class _TransferScreenState extends State<TransferScreen> {
             itemCount: _regionalBanks.length,
             separatorBuilder: (_, __) => const Divider(color: Color(0xFFF0F0F0), height: 1),
             itemBuilder: (context, index) {
-              final bankTitle = _regionalBanks[index];
+              final bank = _regionalBanks[index];
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 leading: Container(
@@ -265,12 +282,12 @@ class _TransferScreenState extends State<TransferScreen> {
                     color: const Color(0xFFF3D8FF),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Center(
-                    child: Icon(Icons.account_balance_outlined, color: Color(0xFF772096), size: 20),
+                  child: Center(
+                    child: AppIcons.buildImageOrIcon(bank['logo']!, width: 26, height: 26),
                   ),
                 ),
                 title: Text(
-                  bankTitle,
+                  bank['name']!,
                   style: GoogleFonts.robotoSlab(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
@@ -278,12 +295,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Color(0xFF939393)),
-                onTap: () {
-                  setState(() {
-                    _selectedBankName = bankTitle;
-                    _currentStep = 2;
-                  });
-                },
+                onTap: () => _selectBank(bank),
               );
             },
           ),
@@ -293,16 +305,193 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   // =========================================================================
-  // STEP 2: INPUT NOMINAL & REKENING SUMBER (FIGMA FRAME #558:975)
+  // FRAME 2: INPUT NOMOR REKENING SESUAI BANK TERPILIH (FIGMA #246:49)
   // =========================================================================
-  Widget _buildInputNominalStep() {
+  Widget _buildInputNoRekeningView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Kartu Penerima (Zavella Meica - BSI 7243567687)
+          // Header Bank Terpilih + Logo Asli
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3D8FF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: AppIcons.buildImageOrIcon(_selectedBankLogo, width: 34, height: 34),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'BANK $_selectedBankName',
+                    style: GoogleFonts.robotoSlab(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF52086B),
+                    ),
+                  ),
+                  Text(
+                    'Transfer ke rekening bank ini',
+                    style: GoogleFonts.robotoSlab(
+                      fontSize: 12,
+                      color: const Color(0xFF939393),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // Box Input Nomor Rekening Figma (#553:251)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFBF8FD),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFD373FC), width: 1.2),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Masukkan no. rekening/nama',
+                  style: GoogleFonts.robotoSlab(
+                    fontSize: 13,
+                    color: const Color(0xFF570374),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _inputAccountNumber.isEmpty ? 'Ketik nomor rekening...' : _inputAccountNumber,
+                        style: GoogleFonts.poppins(
+                          fontSize: _inputAccountNumber.isEmpty ? 15 : 22,
+                          fontWeight: FontWeight.w600,
+                          color: _inputAccountNumber.isEmpty ? const Color(0xFF939393) : Colors.black,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                    if (_inputAccountNumber.isNotEmpty)
+                      GestureDetector(
+                        onTap: () => setState(() => _inputAccountNumber = ''),
+                        child: const Icon(Icons.close, color: Color(0xFF939393), size: 20),
+                      ),
+                  ],
+                ),
+                const Divider(color: Color(0xFFCA31FF), thickness: 1.2, height: 16),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Tombol Quick-Fill Rekening Resmi Figma untuk Bank Ini
+          InkWell(
+            onTap: () {
+              setState(() => _inputAccountNumber = _selectedBankCode);
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3D8FF),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFCA31FF), width: 0.8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.account_circle_outlined, size: 16, color: Color(0xFF52086B)),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Isi Otomatis: $_recipientName ($_selectedBankCode)',
+                    style: GoogleFonts.robotoSlab(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF52086B),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Keypad Numerik Figma
+          _buildNumericKeypad(
+            onDigit: (digit) {
+              if (_inputAccountNumber.length < 16) {
+                setState(() => _inputAccountNumber += digit);
+              }
+            },
+            onDelete: () {
+              if (_inputAccountNumber.isNotEmpty) {
+                setState(() => _inputAccountNumber = _inputAccountNumber.substring(0, _inputAccountNumber.length - 1));
+              }
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // Tombol Lanjutkan Figma (Rectangle 87)
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: ElevatedButton(
+              onPressed: () {
+                if (_inputAccountNumber.isEmpty) {
+                  // Fallback ke default bank jika kosong
+                  _inputAccountNumber = _selectedBankCode;
+                }
+                setState(() => _currentStep = 3); // Lanjut ke frame Tujuan Transfer
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFCA31FF),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
+                elevation: 3,
+              ),
+              child: Text(
+                'Lanjutkan',
+                style: GoogleFonts.robotoSlab(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // =========================================================================
+  // FRAME 3: TUJUAN TRANSFER & NOMINAL (FIGMA #152:856 & #558:975)
+  // Aturan User: "tujuan transfer" font Rasa, strings lain Roboto Slab, angka Poppins
+  // =========================================================================
+  Widget _buildTujuanTransferNominalView() {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Kartu Penerima (Zavella Meica + Bank Terpilih)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -319,6 +508,7 @@ class _TransferScreenState extends State<TransferScreen> {
             ),
             child: Row(
               children: [
+                // Avatar Ikon Figma
                 Container(
                   width: 52,
                   height: 52,
@@ -326,8 +516,13 @@ class _TransferScreenState extends State<TransferScreen> {
                     color: Color(0xFFF3D8FF),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
-                    child: Icon(Icons.person, color: Color(0xFF52086B), size: 30),
+                  child: Center(
+                    child: AppIcons.buildImageOrIcon(
+                      AppIcons.avatarRecipient,
+                      width: 38,
+                      height: 38,
+                      fallbackIcon: Icons.person,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -345,7 +540,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '$_selectedBankName  $_selectedBankCode',
+                        '$_selectedBankName  ${_inputAccountNumber.isEmpty ? _selectedBankCode : _inputAccountNumber}',
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -357,7 +552,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, color: Color(0xFF772096), size: 20),
-                  onPressed: () => setState(() => _currentStep = 1),
+                  onPressed: () => setState(() => _currentStep = 2),
                 ),
               ],
             ),
@@ -390,8 +585,8 @@ class _TransferScreenState extends State<TransferScreen> {
                     Text(
                       'Rp',
                       style: GoogleFonts.robotoSlab(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
                         color: const Color(0xFF52086B),
                       ),
                     ),
@@ -400,7 +595,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       child: Text(
                         _formatCurrency(_amount),
                         style: GoogleFonts.poppins(
-                          fontSize: 28,
+                          fontSize: 26,
                           fontWeight: FontWeight.w700,
                           color: Colors.black,
                         ),
@@ -425,17 +620,18 @@ class _TransferScreenState extends State<TransferScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: ['50000', '100000', '200000', '500000'].map((val) {
+                final isSelected = _amount == val;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ActionChip(
-                    backgroundColor: _amount == val ? const Color(0xFFCA31FF) : const Color(0xFFF3D8FF),
+                    backgroundColor: isSelected ? const Color(0xFFCA31FF) : const Color(0xFFF3D8FF),
                     side: const BorderSide(color: Color(0xFFCA31FF), width: 0.8),
                     label: Text(
                       'Rp ${_formatCurrency(val)}',
                       style: GoogleFonts.robotoSlab(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: _amount == val ? Colors.white : const Color(0xFF570374),
+                        color: isSelected ? Colors.white : const Color(0xFF570374),
                       ),
                     ),
                     onPressed: () => setState(() => _amount = val),
@@ -476,7 +672,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       Text(
                         'Rekening Sumber',
                         style: GoogleFonts.robotoSlab(
-                          fontSize: 12,
+                          fontSize: 13,
                           color: const Color(0xFF939393),
                         ),
                       ),
@@ -505,12 +701,23 @@ class _TransferScreenState extends State<TransferScreen> {
 
           const SizedBox(height: 20),
 
-          // Custom Keypad Figma (1-9, 0, Backspace)
-          _buildFigmaNumericKeypad(),
+          // Keypad Nominal
+          _buildNumericKeypad(
+            onDigit: (digit) {
+              if (_amount.length < 9) {
+                setState(() => _amount += digit);
+              }
+            },
+            onDelete: () {
+              if (_amount.isNotEmpty) {
+                setState(() => _amount = _amount.substring(0, _amount.length - 1));
+              }
+            },
+          ),
 
           const SizedBox(height: 24),
 
-          // Tombol Lanjutkan (Figma Rectangle 87)
+          // Tombol Lanjutkan Figma (Rectangle 87)
           SizedBox(
             width: double.infinity,
             height: 54,
@@ -532,7 +739,7 @@ class _TransferScreenState extends State<TransferScreen> {
               child: Text(
                 'Lanjutkan',
                 style: GoogleFonts.robotoSlab(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -545,8 +752,11 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  // Keypad Numerik Sesuai Figma
-  Widget _buildFigmaNumericKeypad() {
+  // Keypad Reusable
+  Widget _buildNumericKeypad({
+    required Function(String) onDigit,
+    required VoidCallback onDelete,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -554,44 +764,36 @@ class _TransferScreenState extends State<TransferScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildKeypadKey('1'),
-              _buildKeypadKey('2'),
-              _buildKeypadKey('3'),
+              _buildKey('1', () => onDigit('1')),
+              _buildKey('2', () => onDigit('2')),
+              _buildKey('3', () => onDigit('3')),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildKeypadKey('4'),
-              _buildKeypadKey('5'),
-              _buildKeypadKey('6'),
+              _buildKey('4', () => onDigit('4')),
+              _buildKey('5', () => onDigit('5')),
+              _buildKey('6', () => onDigit('6')),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildKeypadKey('7'),
-              _buildKeypadKey('8'),
-              _buildKeypadKey('9'),
+              _buildKey('7', () => onDigit('7')),
+              _buildKey('8', () => onDigit('8')),
+              _buildKey('9', () => onDigit('9')),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildKeypadKey('000', isAction: true, onTap: () {
-                if (_amount.isNotEmpty && _amount.length <= 8) {
-                  setState(() => _amount += '000');
-                }
-              }),
-              _buildKeypadKey('0'),
-              _buildKeypadKey('del', isAction: true, icon: Icons.backspace_outlined, onTap: () {
-                if (_amount.isNotEmpty) {
-                  setState(() => _amount = _amount.substring(0, _amount.length - 1));
-                }
-              }),
+              _buildKey('000', () => onDigit('000'), isSmall: true),
+              _buildKey('0', () => onDigit('0')),
+              _buildKey('del', onDelete, icon: Icons.backspace_outlined),
             ],
           ),
         ],
@@ -599,21 +801,12 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  Widget _buildKeypadKey(
-    String label, {
-    bool isAction = false,
-    IconData? icon,
-    VoidCallback? onTap,
-  }) {
+  Widget _buildKey(String label, VoidCallback onTap, {bool isSmall = false, IconData? icon}) {
     return InkWell(
-      onTap: onTap ?? () {
-        if (_amount.length < 9) {
-          setState(() => _amount += label);
-        }
-      },
-      borderRadius: BorderRadius.circular(30),
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        width: 70,
+        width: 72,
         height: 52,
         decoration: BoxDecoration(
           color: const Color(0xFFFBF8FD),
@@ -626,7 +819,7 @@ class _TransferScreenState extends State<TransferScreen> {
               : Text(
                   label,
                   style: GoogleFonts.poppins(
-                    fontSize: label == '000' ? 16 : 22,
+                    fontSize: isSmall ? 16 : 22,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF52086B),
                   ),
@@ -637,7 +830,7 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   // =========================================================================
-  // STEP 3: MODAL KONFIRMASI TRANSFER (FIGMA FRAME #578:1675)
+  // FRAME 4: MODAL KONFIRMASI TRANSFER (FIGMA #578:1675)
   // =========================================================================
   void _showKonfirmasiTransferSheet() {
     showModalBottomSheet(
@@ -672,14 +865,14 @@ class _TransferScreenState extends State<TransferScreen> {
               Text(
                 'Konfirmasi Transfer',
                 style: GoogleFonts.robotoSlab(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
                   color: const Color(0xFF52086B),
                 ),
               ),
               const SizedBox(height: 16),
 
-              // Detail Penerima
+              // Detail Penerima Spesifik Bank Terpilih
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -688,25 +881,30 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: Color(0xFF772096)),
+                    AppIcons.buildImageOrIcon(
+                      _selectedBankLogo,
+                      width: 42,
+                      height: 42,
+                      fallbackIcon: Icons.account_balance,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           _recipientName,
                           style: GoogleFonts.robotoSlab(
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
                         Text(
-                          '$_selectedBankName  $_selectedBankCode',
-                          style: GoogleFonts.poppins(fontSize: 13, color: const Color(0xFF570374)),
+                          '$_selectedBankName  ${_inputAccountNumber.isEmpty ? _selectedBankCode : _inputAccountNumber}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: const Color(0xFF570374),
+                          ),
                         ),
                       ],
                     ),
@@ -716,10 +914,9 @@ class _TransferScreenState extends State<TransferScreen> {
 
               const SizedBox(height: 20),
 
-              // Rincian Transfer
               _buildDetailRow('Nominal', 'Rp ${_formatCurrency(_amount)}'),
               const Divider(color: Color(0xFFEBD4FA), height: 24),
-              _buildDetailRow('Biaya Admin', 'Gratis (Rp 0)'),
+              _buildDetailRow('Biaya Admin', 'Rp 0'),
               const Divider(color: Color(0xFFEBD4FA), height: 24),
               _buildDetailRow(
                 'Total',
@@ -730,14 +927,13 @@ class _TransferScreenState extends State<TransferScreen> {
 
               const SizedBox(height: 30),
 
-              // Tombol Konfirmasi
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Tutup sheet konfirmasi
-                    _showPinBottomSheet(); // Buka sheet PIN
+                    Navigator.pop(context); // Tutup konfirmasi
+                    _showPinBottomSheet(); // Buka PIN
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFCA31FF),
@@ -762,7 +958,7 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   // =========================================================================
-  // STEP 4: BOTTOM SHEET KONFIRMASI PIN (FIGMA FRAME #180:1255)
+  // FRAME 5: BOTTOM SHEET PIN (FIGMA FRAME #180:1255)
   // =========================================================================
   void _showPinBottomSheet() {
     String pin = '';
@@ -795,7 +991,6 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Icon Kunci Figma
                   Container(
                     width: 50,
                     height: 50,
@@ -810,7 +1005,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   Text(
                     'Konfirmasi PIN',
                     style: GoogleFonts.robotoSlab(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFF52086B),
                     ),
@@ -825,7 +1020,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 6 Titik PIN Indicator (Figma Ellipse 23-28)
+                  // 6 Titik PIN Indicator
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(6, (idx) {
@@ -850,7 +1045,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   Text(
                     'Lupa PIN?',
                     style: GoogleFonts.robotoSlab(
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFFCA31FF),
                     ),
@@ -858,7 +1053,7 @@ class _TransferScreenState extends State<TransferScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Numeric Keypad PIN
+                  // Keypad PIN (Font Rasa untuk digit PIN sesuai Figma)
                   Wrap(
                     spacing: 24,
                     runSpacing: 14,
@@ -870,17 +1065,17 @@ class _TransferScreenState extends State<TransferScreen> {
                             setModalState(() => pin += i.toString());
                             if (pin.length == 6) {
                               Navigator.pop(context);
-                              setState(() => _currentStep = 3); // Ke Resi Bukti
+                              setState(() => _currentStep = 4); // Ke Resi Bukti
                             }
                           }
                         }),
-                      const SizedBox(width: 65, height: 60), // Spacer kosong
+                      const SizedBox(width: 65, height: 60),
                       _buildPinKey('0', () {
                         if (pin.length < 6) {
                           setModalState(() => pin += '0');
                           if (pin.length == 6) {
                             Navigator.pop(context);
-                            setState(() => _currentStep = 3);
+                            setState(() => _currentStep = 4);
                           }
                         }
                       }),
@@ -931,33 +1126,32 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   // =========================================================================
-  // STEP 5: RESI BUKTI TRANSAKSI TRANSFER SUKSES (FIGMA FRAME #403:1048)
+  // FRAME 6: RESI BUKTI TRANSAKSI (FIGMA FRAME #403:1048)
   // =========================================================================
-  Widget _buildReceiptStep() {
+  Widget _buildResiBuktiView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
-          // Icon Sukses Figma dengan aksen lingkaran ganda
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF2E7D32), width: 3),
-            ),
-            child: const Center(
-              child: Icon(Icons.check_rounded, color: Color(0xFF2E7D32), size: 48),
+          // Icon Sukses Figma dari assets/icons/ic_success_tick.png
+          SizedBox(
+            width: 76,
+            height: 76,
+            child: AppIcons.buildImageOrIcon(
+              AppIcons.icSuccessTick,
+              width: 76,
+              height: 76,
+              fallbackIcon: Icons.check_circle_rounded,
+              fallbackColor: const Color(0xFF2E7D32),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
 
           Text(
             'SUKSES!',
             style: GoogleFonts.robotoSlab(
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: FontWeight.w800,
               color: const Color(0xFF52086B),
             ),
@@ -976,7 +1170,12 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.share_outlined, color: Color(0xFF52086B), size: 20),
+              AppIcons.buildImageOrIcon(
+                AppIcons.icShare,
+                width: 20,
+                height: 20,
+                fallbackIcon: Icons.share_outlined,
+              ),
             ],
           ),
 
@@ -984,7 +1183,7 @@ class _TransferScreenState extends State<TransferScreen> {
 
           // Total Transfer Box
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             decoration: BoxDecoration(
               color: const Color(0xFFF3D8FF),
               borderRadius: BorderRadius.circular(16),
@@ -992,9 +1191,9 @@ class _TransferScreenState extends State<TransferScreen> {
             child: Column(
               children: [
                 Text(
-                  'TOTAL',
+                  'TOTAL ',
                   style: GoogleFonts.robotoSlab(
-                    fontSize: 13,
+                    fontSize: 14,
                     color: const Color(0xFF570374),
                     fontWeight: FontWeight.w600,
                   ),
@@ -1031,13 +1230,16 @@ class _TransferScreenState extends State<TransferScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildReceiptRow('Nama Penerima', '$_recipientName ($_selectedBankCode)\n$_selectedBankName'),
+                _buildReceiptRow(
+                  'Nama Penerima ',
+                  '$_recipientName (${_inputAccountNumber.isEmpty ? _selectedBankCode : _inputAccountNumber})\nBank $_selectedBankName',
+                ),
                 const Divider(color: Color(0xFFF3D8FF), height: 20),
                 _buildReceiptRow('Nomor Referensi', '45499730898'),
                 const Divider(color: Color(0xFFF3D8FF), height: 20),
                 _buildReceiptRow('Tanggal Transaksi', '1 Okt 2026  09:18 WIB'),
                 const Divider(color: Color(0xFFF3D8FF), height: 20),
-                _buildReceiptRow('Sumber Dana (XEMA)', '$_userSenderName (085******656)'),
+                _buildReceiptRow('Sumber Dana (XEMA):', '$_userSenderName (085******656)'),
                 const Divider(color: Color(0xFFF3D8FF), height: 20),
                 _buildReceiptRow('Nominal Transfer', 'Rp ${_formatCurrency(_amount)}'),
                 const Divider(color: Color(0xFFF3D8FF), height: 20),
@@ -1061,7 +1263,7 @@ class _TransferScreenState extends State<TransferScreen> {
               child: Text(
                 'OK',
                 style: GoogleFonts.robotoSlab(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -1081,14 +1283,14 @@ class _TransferScreenState extends State<TransferScreen> {
         Text(
           label,
           style: GoogleFonts.robotoSlab(
-            fontSize: 15,
+            fontSize: 16,
             color: const Color(0xFF570374),
           ),
         ),
         Text(
           value,
           style: GoogleFonts.poppins(
-            fontSize: 15,
+            fontSize: 16,
             fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
             color: color ?? Colors.black,
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'core/app_icons.dart';
 
 class TopUpScreen extends StatefulWidget {
   const TopUpScreen({super.key});
@@ -10,44 +11,44 @@ class TopUpScreen extends StatefulWidget {
 }
 
 class _TopUpScreenState extends State<TopUpScreen> {
-  // 1: Pilihan Metode Top Up (Figma 144:1077 & 144:1490)
-  // 2: Detail Pembayaran Virtual Account (Figma 167:31)
+  // Step 1: Pilihan Metode Isi Saldo (Figma #144:1077 & #144:1490)
+  // Step 2: Detail Pembayaran Virtual Account (Figma #167:31)
   int _currentStep = 1;
 
-  String _selectedMethod = 'Bank BRI';
+  String _selectedMethodName = 'Bank BRI';
   String _selectedVaNumber = '1120 8227 3013 438';
+  String _selectedMethodLogo = AppIcons.logoBri;
 
-  final List<Map<String, dynamic>> _bankMethods = [
-    {'name': 'Bank BRI', 'va': '1120 8227 3013 438', 'code': 'BRI', 'color': Color(0xFF00529C)},
-    {'name': 'Bank BCA', 'va': '8801 0851 2343 5656', 'code': 'BCA', 'color': Color(0xFF005EAA)},
-    {'name': 'Bank Mandiri', 'va': '8950 8227 3013 438', 'code': 'MANDIRI', 'color': Color(0xFF003D79)},
-    {'name': 'Bank BNI', 'va': '9881 0851 2343 5656', 'code': 'BNI', 'color': Color(0xFFF37021)},
-    {'name': 'Bank Syariah Indonesia (BSI)', 'va': '7243 0851 2343 565', 'code': 'BSI', 'color': Color(0xFF00A39D)},
-    {'name': 'Bank Permata', 'va': '8450 8227 3013 438', 'code': 'PERMATA', 'color': Color(0xFF00833E)},
-    {'name': 'Bank CIMB Niaga', 'va': '2329 0851 2343 5656', 'code': 'CIMB', 'color': Color(0xFF8B1D2C)},
-    {'name': 'SeaBank', 'va': '7820 8227 3013 438', 'code': 'SEABANK', 'color': Color(0xFFF05A28)},
-    {'name': 'Bank Lainnya', 'va': '1120 8227 3013 438', 'code': 'OTHER', 'color': Color(0xFF570374)},
+  final List<Map<String, String>> _bankMethods = [
+    {'name': 'Bank BRI', 'va': '1120 8227 3013 438', 'logo': AppIcons.logoBri},
+    {'name': 'Bank BCA', 'va': '8801 0851 2343 5656', 'logo': AppIcons.logoBca},
+    {'name': 'Bank Mandiri', 'va': '8950 8227 3013 438', 'logo': AppIcons.logoMandiri},
+    {'name': 'Bank BNI', 'va': '9881 0851 2343 5656', 'logo': AppIcons.logoBni},
+    {'name': 'Bank Syariah Indonesia (BSI)', 'va': '7243 0851 2343 565', 'logo': AppIcons.logoBsi},
+    {'name': 'Bank Permata', 'va': '8450 8227 3013 438', 'logo': AppIcons.logoPermata},
+    {'name': 'Bank CIMB Niaga', 'va': '2329 0851 2343 5656', 'logo': AppIcons.logoCimb},
+    {'name': 'SeaBank', 'va': '7820 8227 3013 438', 'logo': AppIcons.logoSeaBank},
   ];
 
-  final List<Map<String, dynamic>> _retailMethods = [
-    {'name': 'Indomaret', 'va': '8801 0851 2343 5656', 'color': Color(0xFF005EAA)},
-    {'name': 'Alfamart / Alfamidi', 'va': '2329 0851 2343 5656', 'color': Color(0xFFD32F2F)},
-    {'name': 'Kantor Pos Indonesia', 'va': '1120 8227 3013 438', 'color': Color(0xFFFF9800)},
+  final List<Map<String, String>> _retailMethods = [
+    {'name': 'Indomaret', 'va': '8801 0851 2343 5656', 'logo': AppIcons.logoIndomaret},
+    {'name': 'Alfamart / Alfamidi', 'va': '2329 0851 2343 5656', 'logo': AppIcons.logoAlfamart},
+    {'name': 'Kantor Pos Indonesia', 'va': '1120 8227 3013 438', 'logo': AppIcons.logoPos},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildFigmaHeader(),
+      appBar: _buildCustomNavbar(),
       body: SafeArea(
-        child: _currentStep == 1 ? _buildSelectMethodStep() : _buildPaymentDetailStep(),
+        child: _currentStep == 1 ? _buildPilihMetodeView() : _buildDetailVirtualAccountView(),
       ),
     );
   }
 
-  // ==================== HEADER UNGU FIGMA (#D373FC) ====================
-  PreferredSizeWidget _buildFigmaHeader() {
+  // ==================== NAVBAR ISI SALDO FIGMA ====================
+  PreferredSizeWidget _buildCustomNavbar() {
     return PreferredSize(
       preferredSize: const Size.fromHeight(65),
       child: Container(
@@ -74,13 +75,14 @@ class _TopUpScreenState extends State<TopUpScreen> {
                   },
                 ),
                 Expanded(
-                  child: Text(
-                    'ISI SALDO',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF490461),
+                  child: Center(
+                    child: Text(
+                      'ISI SALDO',
+                      style: GoogleFonts.robotoSlab(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF490461),
+                      ),
                     ),
                   ),
                 ),
@@ -101,16 +103,15 @@ class _TopUpScreenState extends State<TopUpScreen> {
   }
 
   // =========================================================================
-  // STEP 1: PILIHAN METODE ISI SALDO (FIGMA FRAME #144:1077 & #144:1490)
+  // STEP 1: PILIHAN METODE ISI SALDO (FIGMA #144:1077 & #144:1490)
   // =========================================================================
-  Widget _buildSelectMethodStep() {
+  Widget _buildPilihMetodeView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section: Transfer Bank
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -134,25 +135,26 @@ class _TopUpScreenState extends State<TopUpScreen> {
             separatorBuilder: (_, __) => const Divider(color: Color(0xFFF0F0F0), height: 1),
             itemBuilder: (context, index) {
               final bank = _bankMethods[index];
-              final isSelected = _selectedMethod == bank['name'];
+              final isSelected = _selectedMethodName == bank['name'];
 
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 leading: Container(
-                  width: 40,
-                  height: 40,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
-                    color: (bank['color'] as Color).withValues(alpha: 0.12),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
                   ),
                   child: Center(
-                    child: Icon(Icons.account_balance, color: bank['color'] as Color, size: 22),
+                    child: AppIcons.buildImageOrIcon(bank['logo']!, width: 32, height: 32),
                   ),
                 ),
                 title: Text(
-                  bank['name'],
+                  bank['name']!,
                   style: GoogleFonts.robotoSlab(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
                     color: isSelected ? const Color(0xFF52086B) : Colors.black87,
                   ),
@@ -177,8 +179,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       ),
                 onTap: () {
                   setState(() {
-                    _selectedMethod = bank['name'];
-                    _selectedVaNumber = bank['va'];
+                    _selectedMethodName = bank['name']!;
+                    _selectedVaNumber = bank['va']!;
+                    _selectedMethodLogo = bank['logo']!;
                   });
                 },
               );
@@ -189,7 +192,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
           const Divider(color: Color(0xFFE5E5E5), thickness: 1),
           const SizedBox(height: 14),
 
-          // Section: Gerai Ritel & Kantor Pos
           Text(
             'Gerai Ritel & Kantor Pos',
             style: GoogleFonts.robotoSlab(
@@ -207,25 +209,31 @@ class _TopUpScreenState extends State<TopUpScreen> {
             separatorBuilder: (_, __) => const Divider(color: Color(0xFFF0F0F0), height: 1),
             itemBuilder: (context, index) {
               final retail = _retailMethods[index];
-              final isSelected = _selectedMethod == retail['name'];
+              final isSelected = _selectedMethodName == retail['name'];
 
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 leading: Container(
-                  width: 40,
-                  height: 40,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
-                    color: (retail['color'] as Color).withValues(alpha: 0.12),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
                   ),
                   child: Center(
-                    child: Icon(Icons.storefront_outlined, color: retail['color'] as Color, size: 22),
+                    child: AppIcons.buildImageOrIcon(
+                      retail['logo']!,
+                      width: 32,
+                      height: 32,
+                      fallbackIcon: Icons.storefront_outlined,
+                    ),
                   ),
                 ),
                 title: Text(
-                  retail['name'],
+                  retail['name']!,
                   style: GoogleFonts.robotoSlab(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
                     color: isSelected ? const Color(0xFF52086B) : Colors.black87,
                   ),
@@ -250,8 +258,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       ),
                 onTap: () {
                   setState(() {
-                    _selectedMethod = retail['name'];
-                    _selectedVaNumber = retail['va'];
+                    _selectedMethodName = retail['name']!;
+                    _selectedVaNumber = retail['va']!;
+                    _selectedMethodLogo = retail['logo']!;
                   });
                 },
               );
@@ -260,7 +269,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
           const SizedBox(height: 35),
 
-          // Tombol Konfirmasi Figma (Rectangle 87)
           SizedBox(
             width: double.infinity,
             height: 52,
@@ -275,8 +283,8 @@ class _TopUpScreenState extends State<TopUpScreen> {
               child: Text(
                 'Konfirmasi',
                 style: GoogleFonts.robotoSlab(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),
@@ -291,14 +299,13 @@ class _TopUpScreenState extends State<TopUpScreen> {
   // =========================================================================
   // STEP 2: DETAIL PEMBAYARAN VIRTUAL ACCOUNT (FIGMA FRAME #167:31)
   // =========================================================================
-  Widget _buildPaymentDetailStep() {
+  Widget _buildDetailVirtualAccountView() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Kartu Pembayaran Virtual Account (Figma Group 133)
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -316,17 +323,22 @@ class _TopUpScreenState extends State<TopUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Bank
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _selectedMethod,
-                      style: GoogleFonts.robotoSlab(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF52086B),
-                      ),
+                    Row(
+                      children: [
+                        AppIcons.buildImageOrIcon(_selectedMethodLogo, width: 34, height: 34),
+                        const SizedBox(width: 10),
+                        Text(
+                          _selectedMethodName,
+                          style: GoogleFonts.robotoSlab(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF52086B),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -359,7 +371,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
                 ),
                 const SizedBox(height: 6),
 
-                // Nomor Virtual Account & Tombol Salin
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -399,7 +410,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                             Text(
                               'Salin',
                               style: GoogleFonts.robotoSlab(
-                                fontSize: 13,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: const Color(0xFF52086B),
                               ),
@@ -413,7 +424,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
                 const SizedBox(height: 12),
 
-                // Peringatan Minimal 10.000 Figma (#D32F2F)
                 Text(
                   '* Minimal 10.000',
                   style: GoogleFonts.robotoSlab(
@@ -427,9 +437,8 @@ class _TopUpScreenState extends State<TopUpScreen> {
                 const Divider(color: Color(0xFFF3D8FF), thickness: 1),
                 const SizedBox(height: 12),
 
-                // Deskripsi Resmi Figma
                 Text(
-                  'Transfer ke nomor Virtual Account di atas menggunakan $_selectedMethod. Saldo akan langsung masuk tanpa konfirmasi manual.',
+                  'Transfer ke nomor Virtual Account di atas menggunakan $_selectedMethodName. Saldo akan langsung masuk tanpa konfirmasi manual.',
                   style: GoogleFonts.robotoSlab(
                     fontSize: 14,
                     height: 1.5,
@@ -442,7 +451,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
           const SizedBox(height: 24),
 
-          // Instruksi Pembayaran (Accordion / ExpansionTile)
           Text(
             'Petunjuk Pembayaran',
             style: GoogleFonts.robotoSlab(
@@ -456,7 +464,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
           _buildInstructionTile(
             title: 'Petunjuk Transfer Mobile Banking',
             steps: [
-              'Buka aplikasi Mobile Banking ($_selectedMethod) Anda dan lakukan login.',
+              'Buka aplikasi Mobile Banking ($_selectedMethodName) Anda dan lakukan login.',
               'Pilih menu Transfer atau Pembayaran > Virtual Account / BRIVA.',
               'Masukkan nomor Virtual Account: $_selectedVaNumber.',
               'Masukkan nominal top up yang Anda inginkan (Minimal Rp 10.000).',
@@ -494,7 +502,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
           const SizedBox(height: 35),
 
-          // Tombol OK Figma (Rectangle 87)
           SizedBox(
             width: double.infinity,
             height: 52,
@@ -507,7 +514,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
               child: Text(
                 'OK',
                 style: GoogleFonts.robotoSlab(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
