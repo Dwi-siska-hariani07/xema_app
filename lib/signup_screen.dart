@@ -180,10 +180,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // =============================================================
                 // 6. FOOTER: "Already have an account? Log in" (Group #391:537)
-                // Diposisikan presisi di atas kurva ungu (Top: 668, persis referensi)
+                // Posisi persis Figma referensi (Top: 722)
                 // =============================================================
                 Positioned(
-                  top: 668,
+                  top: 722,
                   left: 0,
                   right: 0,
                   child: Center(
