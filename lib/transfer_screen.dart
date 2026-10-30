@@ -147,7 +147,10 @@ class _TransferScreenState extends State<TransferScreen> {
     } else if (_currentStep == 3) {
       if (digit == '.' || digit == ',' || digit == '-') return;
       if (_amount.length < 9) {
-        setState(() => _amount += digit);
+        setState(() {
+          _isNominalKeypadOpen = true;
+          _amount += digit;
+        });
       }
     }
   }
@@ -221,7 +224,8 @@ class _TransferScreenState extends State<TransferScreen> {
   String _selectedBankLogo = AppIcons.logoBsi;
   String _inputAccountNumber = '';
   final String _recipientName = 'Zavella Meica';
-  String _amount = '100000';
+  String _amount = '';
+  bool _isNominalKeypadOpen = false;
 
   final String _userSenderName = 'LISA ARUNIA';
   final String _userSenderPhone = '0851 2343 5656';
@@ -451,6 +455,10 @@ class _TransferScreenState extends State<TransferScreen> {
                     if (_currentStep == 2) {
                       setState(() => _currentStep = 1);
                     } else if (_currentStep == 3) {
+                      if (_isNominalKeypadOpen) {
+                        setState(() => _isNominalKeypadOpen = false);
+                        return;
+                      }
                       setState(() => _currentStep = 2);
                     } else if (_currentStep == 4) {
                       Navigator.pop(context);
@@ -1051,12 +1059,12 @@ class _TransferScreenState extends State<TransferScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. Kartu Penerima (User Avatar Bulat Hitam + Nama Zavella Meica + Bank & Norek)
+                // 1. Kartu Penerima (Figma Frame #152:856)
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -1067,10 +1075,11 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   child: Row(
                     children: [
+                      // Avatar bulat Zavella Meica persis ukuran item Figma (42 x 42)
                       AppIcons.buildImageOrIcon(
                         AppIcons.avatarRecipient,
-                        width: 48,
-                        height: 48,
+                        width: 42,
+                        height: 42,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -1078,33 +1087,39 @@ class _TransferScreenState extends State<TransferScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _recipientName,
+                              _recipientName, // 'Zavella Meica'
                               style: GoogleFonts.robotoSlab(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 3),
-                            Row(
-                              children: [
-                                Text(
-                                  '$_selectedBankName ',
-                                  style: GoogleFonts.robotoSlab(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
+                            const SizedBox(height: 4),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '$_selectedBankName  ',
+                                    style: GoogleFonts.robotoSlab(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  displayAccount,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
+                                  Text(
+                                    displayAccount,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      letterSpacing: 0.5,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -1113,81 +1128,84 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
 
                 // 2. Input Nominal (Label Roboto Slab + Box Abu-abu Figma dengan Teks Putih)
                 Text(
                   'Masukkan Nominal',
                   style: GoogleFonts.robotoSlab(
                     fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 8),
 
-                Container(
-                  width: double.infinity,
-                  height: 58,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC4C4C4),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.12),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Rp ',
-                        style: GoogleFonts.robotoSlab(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                GestureDetector(
+                  onTap: () => setState(() => _isNominalKeypadOpen = true),
+                  child: Container(
+                    width: double.infinity,
+                    height: 58,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC4C4C4),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.12),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
                         ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          _amount.isEmpty ? '|' : _formatCurrency(_amount),
-                          style: GoogleFonts.poppins(
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Rp ',
+                          style: GoogleFonts.robotoSlab(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                      ),
-                      if (_amount.isNotEmpty)
-                        GestureDetector(
-                          onTap: () => setState(() => _amount = ''),
-                          child: const Icon(Icons.close, color: Colors.white, size: 20),
+                        Expanded(
+                          child: Text(
+                            _amount.isEmpty ? '|' : '${_formatCurrency(_amount)}|',
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                    ],
+                        if (_amount.isNotEmpty)
+                          GestureDetector(
+                            onTap: () => setState(() => _amount = ''),
+                            child: const Icon(Icons.close, color: Colors.white, size: 20),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
 
-                // 3. Kartu Rekening Sumber (Figma Rectangle 114)
+                // 3. Kartu Rekening Sumber (Figma Frame #152:856)
                 Text(
                   'Rekening Sumber',
                   style: GoogleFonts.robotoSlab(
                     fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 8),
 
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -1199,16 +1217,11 @@ class _TransferScreenState extends State<TransferScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD373FC),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.person, color: Colors.black, size: 28),
-                        ),
+                      // Icon user Rekening Sumber: squircle ungu 60 x 46 persis Figma
+                      AppIcons.buildImageOrIcon(
+                        AppIcons.icSumberUser,
+                        width: 60,
+                        height: 46,
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -1223,14 +1236,14 @@ class _TransferScreenState extends State<TransferScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: 3),
                             Row(
                               children: [
                                 Text(
                                   'Rp ',
                                   style: GoogleFonts.robotoSlab(
                                     fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -1258,72 +1271,85 @@ class _TransferScreenState extends State<TransferScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 32),
               ],
             ),
           ),
         ),
 
-        // Tombol Lanjutkan Full-Width Persis di Atas Keyboard Sesuai Figma #558:975
-        InkWell(
-          onTap: () {
-            if (_amount.isEmpty || int.tryParse(_amount) == 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Masukkan nominal transfer terlebih dahulu')),
-              );
-              return;
-            }
-            _showKonfirmasiTransferSheet();
-          },
-          child: Container(
-            width: double.infinity,
-            height: 56,
-            color: const Color(0xFFD373FC),
-            alignment: Alignment.center,
-            child: Text(
-              'Lanjutkan',
-              style: GoogleFonts.robotoSlab(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF300742),
+        // 4. Tombol Lanjutkan & Keypad
+        if (!_isNominalKeypadOpen)
+          // Frame #152:856: Tombol Lanjutkan Stadium Pill di Bagian Bawah
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 42),
+            child: InkWell(
+              onTap: _handleLanjutkanTransfer,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                width: double.infinity,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD373FC),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Lanjutkan',
+                  style: GoogleFonts.robotoSlab(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF300742),
+                  ),
+                ),
+              ),
+            ),
+          )
+        else ...[
+          // Frame #558:975: Tombol Lanjutkan Full-Width di Atas Keypad
+          InkWell(
+            onTap: _handleLanjutkanTransfer,
+            child: Container(
+              width: double.infinity,
+              height: 56,
+              color: const Color(0xFFD373FC),
+              alignment: Alignment.center,
+              child: Text(
+                'Lanjutkan',
+                style: GoogleFonts.robotoSlab(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF300742),
+                ),
               ),
             ),
           ),
-        ),
 
-        // Keypad 4-Kolom Persis Figma #558:975
-        _buildFigma4ColKeypad(
-          onDigit: (digit) {
-            if (_amount.length < 9) {
-              setState(() => _amount += digit);
-            }
-          },
-          onDelete: () {
-            if (_amount.isNotEmpty) {
-              setState(() => _amount = _amount.substring(0, _amount.length - 1));
-            }
-          },
-          onSubmit: () {
-            if (_amount.isEmpty || int.tryParse(_amount) == 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Masukkan nominal transfer terlebih dahulu')),
-              );
-              return;
-            }
-            _showKonfirmasiTransferSheet();
-          },
-        ),
+          // Keypad 4-Kolom
+          _buildFigma4ColKeypad(
+            onDigit: (digit) {
+              if (_amount.length < 9) {
+                setState(() => _amount += digit);
+              }
+            },
+            onDelete: () {
+              if (_amount.isNotEmpty) {
+                setState(() => _amount = _amount.substring(0, _amount.length - 1));
+              }
+            },
+            onSubmit: _handleLanjutkanTransfer,
+          ),
+        ],
       ],
     );
   }
 
-  // =========================================================================
-  // KEYBOARD 4-KOLOM DENGAN TOMBOL ABU-ABU (#D9D9D9) SESUAI DESAIN FIGMA ASLI
-  // Baris 1: 1, 2, 3, -
-  // Baris 2: 4, 5, 6, _
-  // Baris 3: 7, 8, 9, ⌫
-  // Baris 4: ' , 0, . , ✓
-  // =========================================================================
+  void _handleLanjutkanTransfer() {
+    if (_amount.isEmpty || int.tryParse(_amount) == 0) {
+      _amount = '100000'; // Default nominal transfer Figma
+    }
+    _showKonfirmasiTransferSheet();
+  }
+
   Widget _buildFigma4ColKeypad({
     required Function(String) onDigit,
     required VoidCallback onDelete,
