@@ -14,10 +14,9 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
-  // Support Input Keyboard Fisik Laptop / PC
-  bool _isPinOpen = false;
-  Function(String)? _pinOnDigit;
-  VoidCallback? _pinOnDelete;
+  // Support Input Keyboard Fisik Laptop / PC & Mobile
+  String _pin = '';
+  final FocusNode _pinMobileFocusNode = FocusNode();
   bool _isKonfirmasiOpen = false;
   VoidCallback? _konfirmasiOnSubmit;
 
@@ -31,6 +30,7 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   void dispose() {
     HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
+    _pinMobileFocusNode.dispose();
     super.dispose();
   }
 
@@ -130,11 +130,6 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   void _handleHardwareDigit(String digit) {
-    if (_isPinOpen) {
-      _pinOnDigit?.call(digit);
-      return;
-    }
-
     if (_currentStep == 1) {
       final intVal = int.tryParse(digit);
       if (intVal != null && intVal >= 1 && intVal <= _popularBanks.length) {
@@ -152,15 +147,12 @@ class _TransferScreenState extends State<TransferScreen> {
           _amount += digit;
         });
       }
+    } else if (_currentStep == 4) {
+      _onPinDigit(digit);
     }
   }
 
   void _handleHardwareDelete() {
-    if (_isPinOpen) {
-      _pinOnDelete?.call();
-      return;
-    }
-
     if (_currentStep == 2) {
       if (_showPenerimaSheet) {
         setState(() => _showPenerimaSheet = false);
@@ -174,12 +166,12 @@ class _TransferScreenState extends State<TransferScreen> {
       if (_amount.isNotEmpty) {
         setState(() => _amount = _amount.substring(0, _amount.length - 1));
       }
+    } else if (_currentStep == 4) {
+      _onPinDelete();
     }
   }
 
   void _handleHardwareSubmit() {
-    if (_isPinOpen) return;
-
     if (_isKonfirmasiOpen) {
       _konfirmasiOnSubmit?.call();
       return;
@@ -206,6 +198,8 @@ class _TransferScreenState extends State<TransferScreen> {
       }
       _showKonfirmasiTransferSheet();
     } else if (_currentStep == 4) {
+      _submitPin();
+    } else if (_currentStep == 5) {
       setState(() => _currentStep = 1);
     }
   }
@@ -213,7 +207,8 @@ class _TransferScreenState extends State<TransferScreen> {
   // 1: Pilih Bank (Figma #103:296)
   // 2: Input No Rekening per Bank (Figma #246:49)
   // 3: Tujuan Transfer & Input Nominal (Figma #152:856 & #558:975)
-  // 4: Resi Bukti Transaksi Sukses (Figma #403:1048)
+  // 4: Konfirmasi PIN (Figma #180:1255)
+  // 5: Resi Bukti Transaksi Sukses (Figma #403:1048)
   int _currentStep = 1;
   bool _showPenerimaSheet = false;
 
@@ -422,12 +417,38 @@ class _TransferScreenState extends State<TransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _currentStep == 4 ? const Color(0xFFF8EAFF) : Colors.white,
-      appBar: _currentStep == 4 ? null : _buildCustomNavbar(),
-      body: SafeArea(
-        top: _currentStep != 4,
-        child: _buildBody(),
+    return PopScope(
+      canPop: _currentStep == 1,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_currentStep == 4) {
+          setState(() {
+            _pin = '';
+            _currentStep = 3;
+          });
+        } else if (_currentStep == 5) {
+          setState(() => _currentStep = 1);
+        } else if (_currentStep == 3) {
+          if (_isNominalKeypadOpen) {
+            setState(() => _isNominalKeypadOpen = false);
+            return;
+          }
+          setState(() => _currentStep = 2);
+        } else if (_currentStep == 2) {
+          if (_showPenerimaSheet) {
+            setState(() => _showPenerimaSheet = false);
+            return;
+          }
+          setState(() => _currentStep = 1);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: _currentStep == 5 ? const Color(0xFFF8EAFF) : Colors.white,
+        appBar: (_currentStep == 4 || _currentStep == 5) ? null : _buildCustomNavbar(),
+        body: SafeArea(
+          top: _currentStep != 5,
+          child: _buildBody(),
+        ),
       ),
     );
   }
@@ -460,8 +481,6 @@ class _TransferScreenState extends State<TransferScreen> {
                         return;
                       }
                       setState(() => _currentStep = 2);
-                    } else if (_currentStep == 4) {
-                      Navigator.pop(context);
                     } else {
                       Navigator.pop(context);
                     }
@@ -482,9 +501,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                         )
                       : Text(
-                          _currentStep == 1 || _currentStep == 2
-                              ? 'Transfer'
-                              : 'Bukti Transaksi',
+                          'Transfer',
                           style: GoogleFonts.robotoSlab(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -492,16 +509,6 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                         ),
                 ),
-                if (_currentStep == 4)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: AppIcons.buildImageOrIcon(
-                      AppIcons.icShare,
-                      width: 24,
-                      height: 24,
-                      fallbackIcon: Icons.share_outlined,
-                    ),
-                  ),
               ],
             ),
           ),
@@ -519,6 +526,8 @@ class _TransferScreenState extends State<TransferScreen> {
       case 3:
         return _buildTujuanTransferNominalView();
       case 4:
+        return _buildKonfirmasiPinView();
+      case 5:
         return _buildResiBuktiView();
       default:
         return _buildPilihBankView();
@@ -1476,7 +1485,10 @@ class _TransferScreenState extends State<TransferScreen> {
     _isKonfirmasiOpen = true;
     _konfirmasiOnSubmit = () {
       Navigator.pop(context);
-      _showPinBottomSheet();
+      setState(() {
+        _pin = '';
+        _currentStep = 4;
+      });
     };
 
     showModalBottomSheet(
@@ -1606,8 +1618,11 @@ class _TransferScreenState extends State<TransferScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context); // Tutup konfirmasi
-                      _showPinBottomSheet(); // Buka PIN
+                      Navigator.pop(context); // Tutup konfirmasi modal sheet
+                      setState(() {
+                        _pin = '';
+                        _currentStep = 4; // Transisi full screen ke Frame Konfirmasi PIN (#180:1255)
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFCA31FF),
@@ -1669,217 +1684,264 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   // =========================================================================
-  // FRAME 5: BOTTOM SHEET PIN (FIGMA FRAME #180:1255)
-  // - Logo Kunci (BUKAN Gembok) -> Menggunakan PNG asli Figma
-  // - Lupa PIN ada sambungannya (navigasi ke ForgetPasswordScreen)
+  // FRAME 4: KONFIRMASI PIN FULL SCREEN (FIGMA FRAME #180:1255)
+  // - Full Frame View: Transisi mulus dari konfirmasi transfer sheet
+  // - Top Left: Tombol Kembali Bulat (AppIcons.icBackCircle)
+  // - Center Icon: Logo Kunci Squircle Asli Figma (AppIcons.icPinKey)
+  // - Header: 'Konfirmasi PIN' [Font: Rasa, Bold 32sp]
+  // - Subtitle: 'Masukkan 6-digit PIN Trasaksi kamu' [Font: Roboto Slab 16sp]
+  // - 6 Dots PIN Indicator: Bulat 20x20 pt, jarak 17 pt, warna aktif #1C0823, inaktif #D9D9D9
+  // - Link 'Lupa PIN?': Terhubung ke ForgetPasswordScreen [Font: Roboto Slab 18sp]
+  // - Keypad 3-Kolom Font Poppins untuk Angka (1-9, 0)
+  // - Dynamic Action Key: Ikon Backspace saat digit < 6, berubah jadi Ikon Centang saat 6 digit lengkap
+  // - Tapping Centang / Enter langsung menuju ke Bukti Transaksi Sukses (_currentStep = 5)
+  // - Dual Keyboard: Mengetik via keyboard fisik laptop/PC & keyboard HP / on-screen
   // =========================================================================
-  void _showPinBottomSheet() {
-    String pin = '';
-    _isPinOpen = true;
+  void _onPinDigit(String digit) {
+    if (_pin.length < 6) {
+      setState(() {
+        _pin += digit;
+      });
+    }
+  }
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            void onDigit(String d) {
-              if (pin.length < 6) {
-                setModalState(() => pin += d);
-                if (pin.length == 6) {
-                  Navigator.pop(context);
-                  setState(() => _currentStep = 4);
-                }
-              }
-            }
+  void _onPinDelete() {
+    if (_pin.isNotEmpty) {
+      setState(() {
+        _pin = _pin.substring(0, _pin.length - 1);
+      });
+    }
+  }
 
-            _pinOnDigit = onDigit;
-            _pinOnDelete = () {
-              if (pin.isNotEmpty) {
-                setModalState(() => pin = pin.substring(0, pin.length - 1));
-              }
-            };
+  void _submitPin() {
+    if (_pin.length == 6) {
+      setState(() {
+        _currentStep = 5; // Masuk ke Bukti Transaksi Sukses (Figma #403:1048)
+      });
+    }
+  }
 
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  topRight: Radius.circular(32),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Back Arrow bulat di atas
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_circle_left_outlined, size: 32, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-
-                  // Logo Kunci Asli dari Figma (BUKAN Gembok)
-                  SizedBox(
-                    width: 72,
-                    height: 60,
-                    child: Center(
-                      child: AppIcons.buildImageOrIcon(
-                        AppIcons.icPinKey,
-                        width: 70,
-                        height: 58,
-                        fallbackIcon: Icons.key_rounded,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Text(
-                    'Konfirmasi PIN',
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Masukkan 6-digit PIN Transaksi kamu',
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 6 Titik PIN Indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(6, (idx) {
-                      final isFilled = idx < pin.length;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isFilled
-                              ? const Color(0xFFBD38FC)
-                              : const Color(0xFFD9D9D9),
+  Widget _buildKonfirmasiPinView() {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: double.infinity,
+      child: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 8),
+                        // Tombol Kembali Bulat Otentik Figma di pojok kiri atas
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _pin = '';
+                                  _currentStep = 3;
+                                });
+                              },
+                              child: AppIcons.buildImageOrIcon(
+                                AppIcons.icBackCircle,
+                                width: 48,
+                                height: 48,
+                                fallbackIcon: Icons.arrow_circle_left_outlined,
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-                  ),
 
-                  const SizedBox(height: 20),
+                        const SizedBox(height: 16),
 
-                  // Lupa PIN - Memiliki Sambungan / Navigasi ke ForgetPasswordScreen
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context); // Tutup bottom sheet PIN
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const ForgetPasswordScreen()),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child: Text(
-                        'Lupa PIN?',
-                        style: GoogleFonts.robotoSlab(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFBD38FC),
+                        // Logo Kunci Squircle Otentik Figma Frame #180:1255 (BUKAN Gembok)
+                        Center(
+                          child: AppIcons.buildImageOrIcon(
+                            AppIcons.icPinKey,
+                            width: 104,
+                            height: 102,
+                            fallbackIcon: Icons.key_rounded,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 24),
+                        const SizedBox(height: 18),
 
-                  // Keypad PIN 3-Kolom Font Poppins untuk Angka
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildPinKey('1', () => onDigit('1')),
-                          _buildPinKey('2', () => onDigit('2')),
-                          _buildPinKey('3', () => onDigit('3')),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildPinKey('4', () => onDigit('4')),
-                          _buildPinKey('5', () => onDigit('5')),
-                          _buildPinKey('6', () => onDigit('6')),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildPinKey('7', () => onDigit('7')),
-                          _buildPinKey('8', () => onDigit('8')),
-                          _buildPinKey('9', () => onDigit('9')),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const SizedBox(width: 65, height: 60),
-                          _buildPinKey('0', () => onDigit('0')),
-                          SizedBox(
-                            width: 65,
-                            height: 60,
-                            child: IconButton(
-                              iconSize: 28,
-                              icon: const Icon(Icons.backspace_outlined,
-                                  color: Colors.black),
-                              onPressed: () {
-                                if (pin.isNotEmpty) {
-                                  setModalState(
-                                      () => pin = pin.substring(0, pin.length - 1));
+                        // Header: Konfirmasi PIN [Font: Rasa, Bold 36sp]
+                        Text(
+                          'Konfirmasi PIN',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.rasa(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        // Subtitle: Masukkan 6-digit PIN Trasaksi kamu [Font: Roboto Slab 16sp]
+                        Text(
+                          'Masukkan 6-digit PIN Trasaksi kamu',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.robotoSlab(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+
+                        const SizedBox(height: 44),
+
+                        // 6 Titik PIN Indicator (Bulat 20x20 pt, jarak 17 pt, warna aktif #1C0823, inaktif #D9D9D9)
+                        // Ketuk titik untuk fokus keyboard HP jika diinginkan
+                        GestureDetector(
+                          onTap: () => _pinMobileFocusNode.requestFocus(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(6, (idx) {
+                              final isFilled = idx < _pin.length;
+                              return Container(
+                                margin: EdgeInsets.only(right: idx < 5 ? 17 : 0),
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isFilled
+                                      ? const Color(0xFF1C0823)
+                                      : const Color(0xFFD9D9D9),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+
+                        const SizedBox(height: 52),
+
+                        // Lupa PIN - Sambungan Navigasi ke ForgetPasswordScreen [Font: Roboto Slab 22sp Bold]
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ForgetPasswordScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Lupa PIN?',
+                            style: GoogleFonts.robotoSlab(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF772096),
+                            ),
+                          ),
+                        ),
+
+                        const Spacer(),
+
+                        // Keypad PIN 3-Kolom Font Poppins untuk Angka Sesuai Figma Frame #180:1255
+                        // Baris 1: 1, 2, 3
+                        // Baris 2: 4, 5, 6
+                        // Baris 3: 7, 8, 9
+                        // Baris 4: kosong, 0, tombol aksi dinamis (hapus -> centang saat 6 digit)
+                        _buildPinKeypad(),
+
+                        const SizedBox(height: 28),
+
+                        // Input tersembunyi untuk mendukung input keyboard HP
+                        SizedBox(
+                          width: 1,
+                          height: 1,
+                          child: Opacity(
+                            opacity: 0,
+                            child: TextField(
+                              focusNode: _pinMobileFocusNode,
+                              keyboardType: TextInputType.number,
+                              onChanged: (val) {
+                                if (val.isNotEmpty) {
+                                  for (int i = 0; i < val.length; i++) {
+                                    if (RegExp(r'^[0-9]$').hasMatch(val[i])) {
+                                      _onPinDigit(val[i]);
+                                    }
+                                  }
                                 }
                               },
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             );
           },
-        );
-      },
-    ).whenComplete(() {
-      _isPinOpen = false;
-      _pinOnDigit = null;
-      _pinOnDelete = null;
-    });
+        ),
+      ),
+    );
   }
 
-  Widget _buildPinKey(String num, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(30),
+  Widget _buildPinKeypad() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildPinNumberKey('1'),
+            _buildPinNumberKey('2'),
+            _buildPinNumberKey('3'),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildPinNumberKey('4'),
+            _buildPinNumberKey('5'),
+            _buildPinNumberKey('6'),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildPinNumberKey('7'),
+            _buildPinNumberKey('8'),
+            _buildPinNumberKey('9'),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const SizedBox(width: 80, height: 60),
+            _buildPinNumberKey('0'),
+            _buildPinActionKey(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPinNumberKey(String num) {
+    return InkResponse(
+      onTap: () => _onPinDigit(num),
+      radius: 36,
       child: SizedBox(
-        width: 65,
+        width: 80,
         height: 60,
         child: Center(
           child: Text(
             num,
             style: GoogleFonts.poppins(
-              fontSize: 26,
+              fontSize: 30,
               fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
@@ -1889,7 +1951,36 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  // =========================================================================
+  Widget _buildPinActionKey() {
+    final isComplete = _pin.length == 6;
+    return InkResponse(
+      onTap: isComplete ? _submitPin : _onPinDelete,
+      radius: 36,
+      child: SizedBox(
+        width: 80,
+        height: 60,
+        child: Center(
+          child: isComplete
+              ? AppIcons.buildImageOrIcon(
+                  AppIcons.icKeypadCheck,
+                  width: 36,
+                  height: 32,
+                  fallbackIcon: Icons.check,
+                  fallbackColor: Colors.black,
+                )
+              : AppIcons.buildImageOrIcon(
+                  AppIcons.icKeypadDelete,
+                  width: 36,
+                  height: 30,
+                  fallbackIcon: Icons.backspace_outlined,
+                  fallbackColor: Colors.black,
+                ),
+        ),
+      ),
+    );
+  }
+  
+    // =========================================================================
   // FRAME 6: RESI BUKTI TRANSAKSI (FIGMA FRAME #403:1048)
   // Background lavender lembut (#F8EAFF) dan struktur struk persis Figma
   // =========================================================================

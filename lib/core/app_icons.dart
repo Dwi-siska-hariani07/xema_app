@@ -32,6 +32,9 @@ class AppIcons {
   static const String icSuccessTick = '$_iconsPath/ic_success_tick.png';
   static const String icShare = '$_iconsPath/ic_share.png';
   static const String icPinKey = '$_iconsPath/ic_pin_key.png';
+  static const String icBackCircle = '$_iconsPath/ic_back_circle.png';
+  static const String icKeypadDelete = '$_iconsPath/ic_keypad_delete.png';
+  static const String icKeypadCheck = '$_iconsPath/ic_keypad_check.png';
   static const String icReceiptCheck = '$_iconsPath/ic_receipt_check.png';
   static const String icKonfUser = '$_iconsPath/ic_konf_user.png';
   static const String icSumberUser = '$_iconsPath/ic_sumber_user.png';
