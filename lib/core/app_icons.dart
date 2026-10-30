@@ -4,24 +4,24 @@ import 'package:flutter/material.dart';
 /// Menggabungkan ikon custom Figma & ikon bawaan agar rapi dan mudah dirawat.
 class AppIcons {
   // Grid Button Assets (Figma Frame #103:296 Official Layer Buttons)
-  static const String btnGridBas = '/btn_grid_bas.png';
-  static const String btnGridBri = '/btn_grid_bri.png';
-  static const String btnGridBsi = '/btn_grid_bsi.png';
-  static const String btnGridBni = '/btn_grid_bni.png';
-  static const String btnGridBtn = '/btn_grid_btn.png';
-  static const String btnGridMandiri = '/btn_grid_mandiri.png';
-  static const String btnGridBca = '/btn_grid_bca.png';
-  static const String btnGridSeaBank = '/btn_grid_seabank.png';
+  static const String btnGridBas = 'assets/icons/btn_grid_bas.png';
+  static const String btnGridBri = 'assets/icons/btn_grid_bri.png';
+  static const String btnGridBsi = 'assets/icons/btn_grid_bsi.png';
+  static const String btnGridBni = 'assets/icons/btn_grid_bni.png';
+  static const String btnGridBtn = 'assets/icons/btn_grid_btn.png';
+  static const String btnGridMandiri = 'assets/icons/btn_grid_mandiri.png';
+  static const String btnGridBca = 'assets/icons/btn_grid_bca.png';
+  static const String btnGridSeaBank = 'assets/icons/btn_grid_seabank.png';
 
   // Bank List Official Logos
-  static const String bankListLogo0 = '/bank_list_logo_0.png';
-  static const String bankListLogo1 = '/bank_list_logo_1.png';
-  static const String bankListLogo2 = '/bank_list_logo_2.png';
-  static const String bankListLogo3 = '/bank_list_logo_3.png';
-  static const String bankListLogo4 = '/bank_list_logo_4.png';
-  static const String bankListLogo5 = '/bank_list_logo_5.png';
-  static const String bankListLogo6 = '/bank_list_logo_6.png';
-  static const String bankListLogo7 = '/bank_list_logo_7.png';
+  static const String bankListLogo0 = 'assets/icons/bank_list_logo_0.png';
+  static const String bankListLogo1 = 'assets/icons/bank_list_logo_1.png';
+  static const String bankListLogo2 = 'assets/icons/bank_list_logo_2.png';
+  static const String bankListLogo3 = 'assets/icons/bank_list_logo_3.png';
+  static const String bankListLogo4 = 'assets/icons/bank_list_logo_4.png';
+  static const String bankListLogo5 = 'assets/icons/bank_list_logo_5.png';
+  static const String bankListLogo6 = 'assets/icons/bank_list_logo_6.png';
+  static const String bankListLogo7 = 'assets/icons/bank_list_logo_7.png';
 
   // Asset path folder
   static const String _iconsPath = 'assets/icons';
