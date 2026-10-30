@@ -2009,389 +2009,414 @@ class _TransferScreenState extends State<TransferScreen> {
     final displayAccount =
         _inputAccountNumber.isEmpty ? _selectedBankCode : _inputAccountNumber;
 
-    return Container(
-      color: Colors.white,
-      width: double.infinity,
-      height: double.infinity,
-      child: SafeArea(
-        top: false,
-        bottom: true,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  width: 393,
-                  height: 852,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // 1. Header Ungu dengan Art Party Popper & Tombol Share (Figma #403:1048)
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 220,
-                        child: Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 220,
-                              color: const Color(0xFFD373FC),
-                            ),
-                            // Tombol Share di pojok kanan atas
-                            Positioned(
-                              top: 36,
-                              right: 24,
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: AppIcons.buildImageOrIcon(
-                                  AppIcons.icShareBukti,
-                                  width: 30,
-                                  height: 32,
-                                  fallbackIcon: Icons.share_outlined,
-                                  fallbackColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                            // Gambar Party Popper otentik dari Figma
-                            Positioned(
-                              top: 42,
-                              child: Image.asset(
-                                'assets/images/img_bukti_transaksi_popper.png',
-                                width: 115,
-                                height: 102,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child: Container(
+        color: Colors.white,
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            // 1. Header Ungu Penuh Menembus ke Paling Atas Layar HP (y = 0)
+            // Menyatu sempurna dengan status bar dan frame atas ponsel tanpa celah putih
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 280,
+              child: Container(
+                color: const Color(0xFFD373FC),
+              ),
+            ),
 
-                      // 2. Kartu Struk Resi / Group 26 Otentik Figma (#403:1055, x=25, w=351, y=178, h=588)
-                      Positioned(
-                        top: 178,
-                        left: 25,
-                        width: 351,
-                        height: 588,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF6E1FF),
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              // Bayangan Ungu Otentik Figma Frame #403:1048 (glow lavender kaya pekat)
-                              BoxShadow(
-                                color: const Color(0xFFCA31FF).withValues(alpha: 0.45),
-                                blurRadius: 24,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 8),
-                              ),
-                              BoxShadow(
-                                color: const Color(0xFFCA31FF).withValues(alpha: 0.20),
-                                blurRadius: 8,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+            // 2. Kanvas Konten Utama Presisi Figma Frame #403:1048
+            Positioned.fill(
+              child: SafeArea(
+                top: false, // Memastikan warna ungu mengalir utuh ke status bar atas
+                bottom: true, // Menjaga batas aman tombol OK terhadap navigation bar
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          width: 393,
+                          height: 852,
+                          child: Stack(
+                            clipBehavior: Clip.none,
                             children: [
-                              const SizedBox(height: 20),
-                              // Badge Ceklis Sukses Lingkaran Otentik Figma
-                              AppIcons.buildImageOrIcon(
-                                AppIcons.icReceiptCheck,
-                                width: 67,
-                                height: 67,
-                                fallbackIcon: Icons.check_circle,
-                                fallbackColor: const Color(0xFFCA31FF),
-                              ),
-                              const SizedBox(height: 12),
-
-                              // Header: Bukti Transaksi [Font: Rasa, Bold 26sp]
-                              Text(
-                                'Bukti Transaksi',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.rasa(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-
-                              const SizedBox(height: 22),
-
-                              // Bagian 1: Data Transaksi
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
+                              // Header Ungu dengan Art Party Popper & Tombol Share (Figma #403:1048)
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: 220,
+                                child: Stack(
+                                  alignment: Alignment.topCenter,
                                   children: [
-                                    _buildReceiptRow('Nomor  Referensi', '45499730898', isNumber: true),
-                                    const SizedBox(height: 10),
-                                    _buildReceiptRow('Tanggal Transaksi', '1 Okt 2026  09:18:67 WIB', isNumber: true),
-                                    const SizedBox(height: 10),
-                                    _buildReceiptRow(
-                                      'Sumber Dana (XEMA):',
-                                      '$_userSenderName\n$_userSenderPhone',
-                                      isSender: true,
+                                    Container(
+                                      width: double.infinity,
+                                      height: 220,
+                                      color: const Color(0xFFD373FC),
                                     ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 18),
-                              const Divider(color: Color(0xFFD8C7E2), height: 1, thickness: 1),
-                              const SizedBox(height: 16),
-
-                              // Bagian 2: SUKSES! dengan glow effect
-                              Text(
-                                'SUKSES!',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.robotoSlab(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFCA31FF),
-                                  shadows: [
-                                    Shadow(
-                                      color: const Color(0xFFCA31FF).withValues(alpha: 0.38),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 14),
-
-                              // Nama Penerima & Detail Akun
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Nama Penerima',
-                                      style: GoogleFonts.robotoSlab(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                    // Tombol Share di pojok kanan atas
+                                    Positioned(
+                                      top: 36,
+                                      right: 24,
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: AppIcons.buildImageOrIcon(
+                                          AppIcons.icShareBukti,
+                                          width: 30,
+                                          height: 32,
+                                          fallbackIcon: Icons.share_outlined,
+                                          fallbackColor: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(width: 12),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text.rich(
-                                            TextSpan(
+                                    // Gambar Party Popper otentik dari Figma
+                                    Positioned(
+                                      top: 42,
+                                      child: Image.asset(
+                                        'assets/images/img_bukti_transaksi_popper.png',
+                                        width: 115,
+                                        height: 102,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Kartu Struk Resi / Group 26 Otentik Figma (#403:1055, x=25, w=351, y=178, h=588)
+                              Positioned(
+                                top: 178,
+                                left: 25,
+                                width: 351,
+                                height: 588,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF6E1FF),
+                                    borderRadius: BorderRadius.circular(28),
+                                    boxShadow: [
+                                      // Bayangan Ungu Otentik Figma Frame #403:1048 (glow lavender kaya pekat)
+                                      BoxShadow(
+                                        color: const Color(0xFFCA31FF).withValues(alpha: 0.45),
+                                        blurRadius: 24,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                      BoxShadow(
+                                        color: const Color(0xFFCA31FF).withValues(alpha: 0.20),
+                                        blurRadius: 8,
+                                        spreadRadius: 0,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      // Badge Ceklis Sukses Lingkaran Otentik Figma
+                                      AppIcons.buildImageOrIcon(
+                                        AppIcons.icReceiptCheck,
+                                        width: 67,
+                                        height: 67,
+                                        fallbackIcon: Icons.check_circle,
+                                        fallbackColor: const Color(0xFFCA31FF),
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      // Header: Bukti Transaksi [Font: Rasa, Bold 26sp]
+                                      Text(
+                                        'Bukti Transaksi',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.rasa(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 22),
+
+                                      // Bagian 1: Data Transaksi
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Column(
+                                          children: [
+                                            _buildReceiptRow('Nomor  Referensi', '45499730898', isNumber: true),
+                                            const SizedBox(height: 10),
+                                            _buildReceiptRow('Tanggal Transaksi', '1 Okt 2026  09:18:67 WIB', isNumber: true),
+                                            const SizedBox(height: 10),
+                                            _buildReceiptRow(
+                                              'Sumber Dana (XEMA):',
+                                              '$_userSenderName\n$_userSenderPhone',
+                                              isSender: true,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 18),
+                                      const Divider(color: Color(0xFFD8C7E2), height: 1, thickness: 1),
+                                      const SizedBox(height: 16),
+
+                                      // Bagian 2: SUKSES! dengan glow effect
+                                      Text(
+                                        'SUKSES!',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.robotoSlab(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color(0xFFCA31FF),
+                                          shadows: [
+                                            Shadow(
+                                              color: const Color(0xFFCA31FF).withValues(alpha: 0.38),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 14),
+
+                                      // Nama Penerima & Detail Akun
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Nama Penerima',
+                                              style: GoogleFonts.robotoSlab(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Flexible(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [
+                                                  Text.rich(
+                                                    TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text: '$_recipientName (',
+                                                          style: GoogleFonts.robotoSlab(
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: displayAccount,
+                                                          style: GoogleFonts.poppins(
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: ')',
+                                                          style: GoogleFonts.robotoSlab(
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    _selectedBankFullName,
+                                                    textAlign: TextAlign.right,
+                                                    style: GoogleFonts.robotoSlab(
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 18),
+                                      const Divider(color: Color(0xFFD8C7E2), height: 1, thickness: 1),
+                                      const SizedBox(height: 16),
+
+                                      // Bagian 3: Nominal Transfer & Biaya Admin
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                TextSpan(
-                                                  text: '$_recipientName (',
+                                                Text(
+                                                  'Nominal  Transfer',
                                                   style: GoogleFonts.robotoSlab(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                   ),
                                                 ),
-                                                TextSpan(
-                                                  text: displayAccount,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: ')',
-                                                  style: GoogleFonts.robotoSlab(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
+                                                Text.rich(
+                                                  TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: 'Rp ',
+                                                        style: GoogleFonts.robotoSlab(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: _formatCurrency(_amount),
+                                                        style: GoogleFonts.poppins(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            _selectedBankFullName,
-                                            textAlign: TextAlign.right,
-                                            style: GoogleFonts.robotoSlab(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Biaya Admin',
+                                                  style: GoogleFonts.robotoSlab(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Gratis',
+                                                  style: GoogleFonts.robotoSlab(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: const Color(0xFFFE4D55),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+
+                                      const SizedBox(height: 18),
+                                      const Divider(color: Color(0xFFB8A9BF), height: 1.5, thickness: 1.5),
+                                      const SizedBox(height: 18),
+
+                                      // Bagian 4: TOTAL
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'TOTAL',
+                                              style: GoogleFonts.robotoSlab(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'Rp ',
+                                                    style: GoogleFonts.robotoSlab(
+                                                      fontSize: 22,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: _formatCurrency(_amount),
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 24,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
 
-                              const SizedBox(height: 18),
-                              const Divider(color: Color(0xFFD8C7E2), height: 1, thickness: 1),
-                              const SizedBox(height: 16),
-
-                              // Bagian 3: Nominal Transfer & Biaya Admin
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Nominal  Transfer',
+                              // Tombol OK di paling bawah (y=784, h=48, bottom margin=20 pt)
+                              Positioned(
+                                top: 784,
+                                left: 14,
+                                right: 14,
+                                height: 48,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFCA31FF),
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(color: Colors.black, width: 2.0),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(24),
+                                      onTap: () {
+                                        setState(() => _currentStep = 1);
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          'OK',
                                           style: GoogleFonts.robotoSlab(
-                                            fontSize: 14,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                        Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Rp ',
-                                                style: GoogleFonts.robotoSlab(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: _formatCurrency(_amount),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Biaya Admin',
-                                          style: GoogleFonts.robotoSlab(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Gratis',
-                                          style: GoogleFonts.robotoSlab(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: const Color(0xFFFE4D55),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 18),
-                              const Divider(color: Color(0xFFB8A9BF), height: 1.5, thickness: 1.5),
-                              const SizedBox(height: 18),
-
-                              // Bagian 4: TOTAL
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'TOTAL',
-                                      style: GoogleFonts.robotoSlab(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
                                       ),
                                     ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'Rp ',
-                                            style: GoogleFonts.robotoSlab(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: _formatCurrency(_amount),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-
-                      // 3. TOMBOL OK DI PALING BAWAH SESUAI FIGMA #403:1048
-                      // Top: 784 pt, Left: 14 pt, Right: 14 pt, Height: 48 pt, Bottom Margin: 20 pt
-                      Positioned(
-                        top: 784,
-                        left: 14,
-                        right: 14,
-                        height: 48,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFCA31FF),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: Colors.black, width: 2.0),
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(24),
-                              onTap: () {
-                                setState(() => _currentStep = 1);
-                              },
-                              child: Center(
-                                child: Text(
-                                  'OK',
-                                  style: GoogleFonts.robotoSlab(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
