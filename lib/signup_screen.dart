@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
+import 'signup_verify_otp_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -57,6 +58,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onCloseKeyboard() {
+    // Jika sedang mengisi rePassword (password kedua), langsung arahkan ke Verify OTP (Figma node #302-304)
+    if (activeField == 'rePassword') {
+      setState(() {
+        isKeyboardOpen = false;
+        activeField = '';
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignupVerifyOtpScreen(),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       isKeyboardOpen = false;
       activeField = '';
@@ -91,12 +107,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
               clipBehavior: Clip.none,
               children: [
                 // =============================================================
-                // 1. LATAR BELAKANG ASLI FIGMA (Kubah Atas + Lengkungan Bawah)
-                // Diekspor langsung secara presisi 1:1 dari node Figma
+                // 1. ELEMEN FIGMA: KUBAH ATAS (Logo & Xema)
                 // =============================================================
-                Positioned.fill(
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 203,
                   child: Image.asset(
-                    'assets/images/figma_signup_bg_perfect.png',
+                    'assets/images/figma_top_dome.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                // =============================================================
+                // 1B. ELEMEN FIGMA: LENGKUNGAN UNGU BAWAH (Kiri Bawah)
+                // Diekstrak persis dari Figma tanpa teks bawaan
+                // =============================================================
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  width: 254,
+                  height: 131,
+                  child: Image.asset(
+                    'assets/images/figma_bottom_curve.png',
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -180,10 +214,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // =============================================================
                 // 6. FOOTER: "Already have an account? Log in" (Group #391:537)
-                // Posisi persis Figma referensi (Top: 722)
+                // Posisi persis Figma referensi (top: 672, di atas lengkungan ungu)
                 // =============================================================
                 Positioned(
-                  top: 722,
+                  top: 672,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -194,6 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'Already have an account? ',
                           style: GoogleFonts.pochaevsk(
                             fontSize: 16,
+                            fontWeight: FontWeight.w600,
                             color: textPurple,
                           ),
                         ),
