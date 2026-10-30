@@ -23,246 +23,275 @@ class _KoinScreenState extends State<KoinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'XEMA POIN',
-          style: GoogleFonts.poltawskiNowy(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF52086B),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // Kartu Total Poin Figma
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(22),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE9CAF7),
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: const Color(0xFFCA31FF), width: 1.2),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x33772096),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/coin_gold.png',
-                    width: 60,
-                    height: 60,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      Icons.monetization_on,
-                      color: Color(0xFFE5A93C),
-                      size: 60,
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // ========================================================
+              // 1. TAMPILAN ATAS / HEADER (PERSIS ASLI FIGMA)
+              // ========================================================
+              Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    // Gambar Header Asli Figma (Bercak Organik, XEMA POIN, & Garis Pembatas)
+                    Image.asset(
+                      'assets/images/koin_header.png',
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: (_, __, ___) => Container(
+                        padding: const EdgeInsets.only(top: 45, bottom: 15),
+                        color: const Color(0xFFFAF5FD),
+                        child: Center(
+                          child: Text(
+                            'XEMA POIN',
+                            style: GoogleFonts.poltawskiNowy(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF52086B),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 18),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total Poin Anda',
-                        style: GoogleFonts.robotoSlab(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF570374),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '1.500 Poin',
-                        style: GoogleFonts.robotoSlab(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF52086B),
-                        ),
-                      ),
-                      Text(
-                        'Setara Rp 150,00',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: const Color(0xFF570374),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 25),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Tukar Poin ke Saldo Tunai',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF570374),
+                    // Area Klik Tombol Kembali (Back Arrow)
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: 70,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
 
-            // Opsi Penukaran Figma
-            ..._redeemOptions.map((opt) {
-              final isSelected = _selectedPoin == opt['poin'];
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedPoin = opt['poin']!;
-                    _cashReward = opt['cash']!;
-                  });
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFF3D8FF) : const Color(0xFFF8F5FB),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? const Color(0xFFCA31FF) : const Color(0xFFE0E0E0),
-                      width: isSelected ? 1.5 : 1,
+              const SizedBox(height: 14),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    // ========================================================
+                    // 2. KARTU TOTAL POIN (GAMBAR KEDUA FIGMA 100% PERSIS)
+                    // ========================================================
+                    Image.asset(
+                      'assets/images/koin_total_card.png',
+                      width: double.infinity,
+                      fit: BoxFit.contain,
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.stars_rounded,
-                            color: isSelected ? const Color(0xFFCA31FF) : const Color(0xFF939393),
-                            size: 28,
+
+                    const SizedBox(height: 16),
+
+                    // ========================================================
+                    // 3. DAFTAR PILIHAN PENUKARAN POIN FIGMA
+                    // ========================================================
+                    ..._redeemOptions.map((opt) {
+                      final isSelected = _selectedPoin == opt['poin'];
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedPoin = opt['poin']!;
+                            _cashReward = opt['cash']!;
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEDD5FA),
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(
+                              color: const Color(0xFFCA31FF),
+                              width: isSelected ? 2.0 : 1.2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isSelected
+                                    ? const Color(0x4DCA31FF)
+                                    : const Color(0x24772096),
+                                blurRadius: isSelected ? 10 : 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 14),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                '${opt['poin']} POIN',
-                                style: GoogleFonts.robotoSlab(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1C0823),
+                              // Ikon Koin Opsi Penukaran Figma (Coin Option)
+                              Image.asset(
+                                'assets/images/coin_option.png',
+                                width: 44,
+                                height: 44,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.monetization_on,
+                                  color: Color(0xFFE5A93C),
+                                  size: 40,
                                 ),
                               ),
+                              const SizedBox(width: 12),
+
+                              // Angka Poin & Nilai Tukar (Poppins)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    opt['poin']!,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    opt['cash']!,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF52086B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const Spacer(),
+
+                              // Tulisan "POIN" (Roboto Slab)
                               Text(
-                                opt['cash']!,
+                                'POIN',
                                 style: GoogleFonts.robotoSlab(
-                                  fontSize: 13,
-                                  color: const Color(0xFF570374),
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      Icon(
-                        isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                        color: isSelected ? const Color(0xFFCA31FF) : const Color(0xFF939393),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-
-            const SizedBox(height: 16),
-
-            // Banner Kumpulkan Lebih Banyak Poin
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFCA31FF), Color(0xFF772096)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'KUMPULKAN LEBIH BANYAK POIN!',
-                          style: GoogleFonts.robotoSlab(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Lakukan transaksi harian untuk mendapat cashback poin hingga 10%!',
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.white.withValues(alpha: 0.9),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-                        title: const Text('Klaim Berhasil!'),
-                        content: Text('Selamat! Penukaran $_selectedPoin ke saldo $_cashReward berhasil diajukan.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('OK'),
-                          ),
-                        ],
                       );
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCA31FF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                ),
-                child: Text(
-                  'KLAIM SEKARANG',
-                  style: GoogleFonts.robotoSlab(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                    }),
+
+                    const SizedBox(height: 10),
+
+                    // ========================================================
+                    // 4. BAGIAN BAWAH: ILUSTRASI KUCING & TOMBOL KLAIM
+                    // ========================================================
+                    Container(
+                      width: double.infinity,
+                      constraints: const BoxConstraints(maxWidth: 380),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Ilustrasi Kucing Harta Karun & Teks "KUMPULKAN LEBIH BANYAK POIN!"
+                          Image.asset(
+                            'assets/images/koin_cat.png',
+                            width: double.infinity,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Row(
+                              children: [
+                                Text(
+                                  'KUMPULKAN LEBIH\nBANYAK POIN!',
+                                  style: GoogleFonts.robotoSlab(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF52086B),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Tombol "KLAIM" (Roboto Slab, Warna #CA31FF)
+                          Positioned(
+                            left: 14,
+                            bottom: 12,
+                            child: Container(
+                              width: 115,
+                              height: 38,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFCA31FF),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x40CA31FF),
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(22),
+                                          ),
+                                          title: Text(
+                                            'Klaim Berhasil!',
+                                            style: GoogleFonts.robotoSlab(
+                                              fontWeight: FontWeight.bold,
+                                              color: const Color(0xFF52086B),
+                                            ),
+                                          ),
+                                          content: Text(
+                                            'Selamat! Penukaran $_selectedPoin POIN ke saldo $_cashReward berhasil diajukan.',
+                                            style: GoogleFonts.poppins(fontSize: 14),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: Text(
+                                                'OK',
+                                                style: GoogleFonts.robotoSlab(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: const Color(0xFFCA31FF),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'KLAIM',
+                                      style: GoogleFonts.robotoSlab(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
