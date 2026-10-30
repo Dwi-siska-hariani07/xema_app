@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1484,118 +1483,95 @@ class _TransferScreenState extends State<TransferScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.transparent, // Transparan karena BackdropFilter di builder menangani scrim & blur
+      barrierColor: Colors.black.withValues(alpha: 0.25), // Background tertutup bayangan/scrim tanpa blur sesuai Figma
       builder: (context) {
-        return Stack(
-          children: [
-            // 1. Scrim & Blur seluruh background (Figma Frame #578:1675)
-            Positioned.fill(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4.5, sigmaY: 4.5),
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.16),
-                  ),
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(32),
+              topRight: Radius.circular(32),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.22),
+                blurRadius: 24,
+                spreadRadius: 3,
+                offset: const Offset(0, -8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header: Konfirmasi Transfer [Font: Rasa, Bold 24sp]
+              Text(
+                'Konfirmasi Transfer',
+                style: GoogleFonts.rasa(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-            ),
+              const SizedBox(height: 18),
 
-            // 2. Bottom Sheet Konfirmasi Transfer (Figma Frame #578:1675)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
-                  ),
+              // Detail Penerima: Kartu Ungu Muda (#F3D8FF) dengan Ikon User Bulat Resmi Figma
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3D8FF),
+                  borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 16,
-                      offset: Offset(0, -4),
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    // Header: Konfirmasi Transfer [Font: Rasa, Bold 24sp]
-                    Text(
-                      'Konfirmasi Transfer',
-                      style: GoogleFonts.rasa(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                    // Avatar User Bulat Figma (42 x 42 px)
+                    AppIcons.buildImageOrIcon(
+                      AppIcons.avatarRecipient,
+                      width: 42,
+                      height: 42,
                     ),
-                    const SizedBox(height: 18),
-
-                    // Detail Penerima: Kartu Ungu Muda (#F3D8FF) dengan Ikon User Bulat Resmi Figma
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3D8FF),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Avatar User Bulat Figma (42 x 42 px)
-                          AppIcons.buildImageOrIcon(
-                            AppIcons.avatarRecipient,
-                            width: 42,
-                            height: 42,
+                          Text(
+                            _recipientName,
+                            style: GoogleFonts.robotoSlab(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 3),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
                               children: [
                                 Text(
-                                  _recipientName,
+                                  '$_selectedBankName ',
                                   style: GoogleFonts.robotoSlab(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.black,
                                   ),
                                 ),
-                                const SizedBox(height: 3),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        ' ',
-                                        style: GoogleFonts.robotoSlab(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        displayAccount,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
+                                Text(
+                                  displayAccount,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
@@ -1604,56 +1580,56 @@ class _TransferScreenState extends State<TransferScreen> {
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    // Baris Rincian Transfer [Label: Roboto Slab, Nominal/Angka: Poppins]
-                    _buildKonfirmasiRow('Nominal', 'Rp ${_formatCurrency(_amount)}'),
-                    const SizedBox(height: 16),
-                    _buildKonfirmasiRow('Biaya Admin', 'Rp 0'),
-                    const SizedBox(height: 16),
-                    _buildKonfirmasiRow(
-                      'Total',
-                      'Rp ${_formatCurrency(_amount)}',
-                      isBold: true,
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // Tombol Konfirmasi Magenta Stadium Pill (#CA31FF) Sesuai Figma #578:1675
-                    Center(
-                      child: SizedBox(
-                        width: 260,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context); // Tutup konfirmasi
-                            _showPinBottomSheet(); // Buka PIN
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFCA31FF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Text(
-                            'Konfirmasi',
-                            style: GoogleFonts.robotoSlab(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
                   ],
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 24),
+
+              // Baris Rincian Transfer [Label: Roboto Slab, Nominal/Angka: Poppins]
+              _buildKonfirmasiRow('Nominal', 'Rp ${_formatCurrency(_amount)}'),
+              const SizedBox(height: 16),
+              _buildKonfirmasiRow('Biaya Admin', 'Rp 0'),
+              const SizedBox(height: 16),
+              _buildKonfirmasiRow(
+                'Total',
+                'Rp ${_formatCurrency(_amount)}',
+                isBold: true,
+              ),
+
+              const SizedBox(height: 30),
+
+              // Tombol Konfirmasi Magenta Stadium Pill (#CA31FF) Sesuai Figma #578:1675
+              Center(
+                child: SizedBox(
+                  width: 260,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Tutup konfirmasi
+                      _showPinBottomSheet(); // Buka PIN
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFCA31FF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      'Konfirmasi',
+                      style: GoogleFonts.robotoSlab(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         );
       },
     ).whenComplete(() {
@@ -1662,7 +1638,7 @@ class _TransferScreenState extends State<TransferScreen> {
     });
   }
 
-    Widget _buildKonfirmasiRow(String label, String value, {bool isBold = false}) {
+      Widget _buildKonfirmasiRow(String label, String value, {bool isBold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
