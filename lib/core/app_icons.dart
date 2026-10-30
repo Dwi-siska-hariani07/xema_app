@@ -40,6 +40,10 @@ class AppIcons {
   static const String icKonfUser = '$_iconsPath/ic_konf_user.png';
   static const String icSumberUser = '$_iconsPath/ic_sumber_user.png';
   static const String popperArt = '$_iconsPath/popper_art.png';
+  static const String icTopupNavbar = '$_iconsPath/ic_topup_navbar.png';
+  static const String icBankSelectedCheck = '$_iconsPath/ic_bank_selected_check.png';
+  static const String icTransferArrows = '$_iconsPath/ic_transfer_arrows.png';
+  static const String icBankLainnya = '$_iconsPath/ic_bank_lainnya.png';
 
   // Bank Logos (Figma Official Assets)
   static const String logoBca = '$_imagesPath/logo_bca.png';
