@@ -1,7 +1,6 @@
-import 'ewallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'core/app_colors.dart';
+import 'ewallet_screen.dart';
 import 'transfer_screen.dart';
 import 'topup_screen.dart';
 import 'ppob_screen.dart';
@@ -23,10 +22,16 @@ class _BerandaScreenState extends State<BerandaScreen> {
   int _currentTabIndex = 0;
   bool _isBalanceVisible = true;
 
+  final List<String> _bannerAssets = [
+    'assets/images/banner_promo_yellow.png',
+    'assets/images/banner_qris_blue.png',
+    'assets/images/banner_warning_red.png',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F5FB),
+      backgroundColor: Colors.white,
       body: _buildCurrentTab(),
       bottomNavigationBar: _buildBottomNav(),
     );
@@ -39,7 +44,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
       case 1:
         return const HistoryScreen();
       case 2:
-        return const KoinScreen();
+        return const NotificationScreen();
       case 3:
         return const ProfileScreen();
       default:
@@ -48,91 +53,279 @@ class _BerandaScreenState extends State<BerandaScreen> {
   }
 
   Widget _buildHomeTab() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scale = screenWidth / 373.0;
+
+    // Padding horizontal kartu menu tengah (24 * scale)
+    final cardPadding = 24.0 * scale;
+
+    // Posisi User Pill: digeser ke kanan agar sejajar lurus dengan tombol Transfer (36 * scale)
+    final pillLeftMargin = 36.0 * scale;
+
+    // Posisi Total Saldo & Rp: rata kanan sedikit lebih masuk dibanding ikon kontak (44 * scale)
+    final saldoLeftMargin = 44.0 * scale;
+
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          // ==================== HEADER UNGU FIGMA ====================
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(top: 48, left: 20, right: 20, bottom: 65),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFCA31FF), Color(0xFF9B1DC7), Color(0xFF772096)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(35),
-                    bottomRight: Radius.circular(35),
+          // ==================== 1. HEADER UNGU FIGMA ====================
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(0, 42, cardPadding, 22 * scale),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/beranda_header_bubble_hd.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Baris 1: Logo Xema di Pojok Kanan Atas
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    'assets/images/xema_header_logo_flawless.png',
+                    height: 38 * scale,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                child: Column(
-                  children: [
-                    // Top User Bar
-                    Row(
+
+                SizedBox(height: 8 * scale),
+
+                // Baris 2: Pill Pengguna (Digeser ke kanan, sejajar dengan elemen Transfer)
+                Padding(
+                  padding: EdgeInsets.only(left: pillLeftMargin),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10 * scale,
+                      vertical: 6 * scale,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      borderRadius: BorderRadius.circular(30 * scale),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: const Color(0xFFE9CAF7),
-                            child: Icon(Icons.person, color: AppColors.primary, size: 26),
+                        Container(
+                          width: 38 * scale,
+                          height: 38 * scale,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            color: const Color(0xFFCA31FF),
+                            size: 26 * scale,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 8 * scale),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'LISA ARUNIA',
+                              style: GoogleFonts.poppins(
+                                fontSize: 13.5 * scale,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            Text(
+                              '0851 2343 5656',
+                              style: GoogleFonts.robotoSlab(
+                                fontSize: 11.5 * scale,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white.withValues(alpha: 0.95),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 8 * scale),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 16 * scale),
+
+                // Baris 3: Total Saldo & Ikon Mata (Rata ke kanan sedikit lebih dibanding profil)
+                Padding(
+                  padding: EdgeInsets.only(left: saldoLeftMargin),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Total Saldo',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12.5 * scale,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: 8 * scale),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isBalanceVisible = !_isBalanceVisible;
+                          });
+                        },
+                        child: Icon(
+                          _isBalanceVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.white,
+                          size: 19 * scale,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 6 * scale),
+
+                // Baris 4: Nominal Saldo (Rata ke kanan sedikit lebih dibanding profil)
+                Padding(
+                  padding: EdgeInsets.only(left: saldoLeftMargin),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Rp  ',
+                        style: GoogleFonts.poppins(
+                          fontSize: 15.5 * scale,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 14 * scale,
+                          vertical: 5 * scale,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(16 * scale),
+                        ),
+                        child: Text(
+                          _isBalanceVisible ? '76.565.000,00' : '••••••••',
+                          style: GoogleFonts.poppins(
+                            fontSize: 19 * scale,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: _isBalanceVisible ? 0.5 : 2.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Jarak presisi dari Header ke Menu Card
+          SizedBox(height: 20 * scale),
+
+          // ==================== 2. KARTU GRID MENU ASLI 1:1 FIGMA ====================
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: cardPadding),
+            child: SizedBox(
+              width: double.infinity,
+              child: AspectRatio(
+                aspectRatio: 324 / 200,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.asset(
+                        'assets/images/figma_artboard_menu.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    // Tap targets transparan untuk 8 tombol menu
+                    Column(
+                      children: [
+                        // Baris 1: TRANSFER, ISI SALDO, PULSA & KUOTA, PLN
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                'Halo, LISA ARUNIA',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const TransferScreen()),
+                                  ),
                                 ),
                               ),
-                              Text(
-                                '0851 2343 5656',
-                                style: GoogleFonts.robotoSlab(
-                                  fontSize: 13,
-                                  color: const Color(0xFFF3D8FF),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const TopUpScreen()),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 1)),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        // Notifikasi Bell
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const NotificationScreen()),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Stack(
-                              children: [
-                                Icon(Icons.notifications_outlined, color: Colors.white, size: 24),
-                                Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  child: CircleAvatar(
-                                    radius: 4,
-                                    backgroundColor: Color(0xFFFF383C),
+                        // Baris 2: E-WALLET, INVESTASI EMAS, TOP UP GAME, MENU
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const EwalletScreen()),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const GoldScreen()),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const GameScreen()),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {},
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -140,474 +333,135 @@ class _BerandaScreenState extends State<BerandaScreen> {
                   ],
                 ),
               ),
+            ),
+          ),
 
-              // ==================== KARTU SALDO OVERLAPPING ====================
-              Positioned(
-                left: 18,
-                right: 18,
-                bottom: -45,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF772096).withValues(alpha: 0.18),
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+          // Jarak presisi dari Menu Card ke Promo Banner
+          SizedBox(height: 22 * scale),
+
+          // ==================== 3. BANNER PROMO (SEJAJAR & BESAR SESUAI FIGMA) ====================
+          SizedBox(
+            height: 105 * scale,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: cardPadding),
+              itemCount: _bannerAssets.length,
+              separatorBuilder: (context, index) => SizedBox(width: 10 * scale),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (index == 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
+                      );
+                    }
+                  },
+                  child: SizedBox(
+                    width: 270 * scale,
+                    height: 105 * scale,
+                    child: Image.asset(
+                      _bannerAssets[index],
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Saldo Xema',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: const Color(0xFF939393),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _isBalanceVisible = !_isBalanceVisible;
-                                      });
-                                    },
-                                    child: Icon(
-                                      _isBalanceVisible ? Icons.visibility : Icons.visibility_off,
-                                      size: 16,
-                                      color: const Color(0xFF939393),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _isBalanceVisible ? 'Rp 76.565.000' : 'Rp ••••••••',
-                                style: GoogleFonts.robotoSlab(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF570374),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Badge XEMA POIN
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => const KoinScreen()),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3D8FF),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: const Color(0xFFCA31FF), width: 0.8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/coin_gold.png',
-                                    width: 18,
-                                    height: 18,
-                                    errorBuilder: (_, __, ___) => const Icon(
-                                      Icons.monetization_on,
-                                      color: Color(0xFFE5A93C),
-                                      size: 18,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    '1.500 Poin',
-                                    style: GoogleFonts.robotoSlab(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF570374),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                );
+              },
+            ),
+          ),
+
+          // Jarak presisi dari Promo Banner ke Poin Card
+          SizedBox(height: 26 * scale),
+
+          // ==================== 4. KARTU XEMA POIN ASLI FIGMA ====================
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: cardPadding),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const KoinScreen()),
+                );
+              },
+              child: SizedBox(
+                width: double.infinity,
+                child: AspectRatio(
+                  aspectRatio: 340 / 135,
+                  child: Image.asset(
+                    'assets/images/figma_poin_card_exact.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
+              ),
+            ),
+          ),
+
+          // Jarak presisi ke bawah sebelum Bottom Navigation
+          SizedBox(height: 32 * scale),
+        ],
+      ),
+    );
+  }
+
+  // ==================== 5. BOTTOM NAVIGATION BAR ASLI FIGMA ====================
+  Widget _buildBottomNav() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scale = screenWidth / 373.0;
+
+    return Container(
+      color: const Color(0xFFF3D8FF),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64 * scale,
+          child: Row(
+            children: [
+              _buildFigmaTabItem(
+                index: 0,
+                assetPath: 'assets/images/nav_btn_home_pure.png',
+              ),
+              _buildFigmaTabItem(
+                index: 1,
+                assetPath: 'assets/images/nav_btn_history_pure.png',
+              ),
+              _buildFigmaTabItem(
+                index: 2,
+                assetPath: 'assets/images/nav_btn_inbox_pure.png',
+              ),
+              _buildFigmaTabItem(
+                index: 3,
+                assetPath: 'assets/images/nav_btn_user_pure.png',
               ),
             ],
           ),
-
-          const SizedBox(height: 60),
-
-          // ==================== GRID MENU LAYANAN UTAMA FIGMA ====================
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Layanan Xema',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF570374),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  GridView.count(
-                    crossAxisCount: 4,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 10,
-                    children: [
-                      _buildMenuItem(
-                        icon: Icons.send_rounded,
-                        label: 'Transfer',
-                        color: const Color(0xFFCA31FF),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const TransferScreen()),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.add_circle_outline,
-                        label: 'Isi Saldo',
-                        color: const Color(0xFF1976D2),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const TopUpScreen()),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.phone_android_rounded,
-                        label: 'Pulsa & Kuota',
-                        color: const Color(0xFFE91E63),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.bolt_rounded,
-                        label: 'PLN',
-                        color: const Color(0xFFFF9800),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 1)),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.account_balance_wallet_outlined,
-                        label: 'E-Wallet',
-                        color: const Color(0xFF00B0FF),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const EwalletScreen()),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.diamond_outlined,
-                        label: 'Emas',
-                        color: const Color(0xFFFFC107),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const GoldScreen()),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.sports_esports_outlined,
-                        label: 'Game',
-                        color: const Color(0xFF9C27B0),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const GameScreen()),
-                        ),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.stars_rounded,
-                        label: 'Poin',
-                        color: const Color(0xFFCA31FF),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const KoinScreen()),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // ==================== BANNER PROMO RESMI FIGMA ====================
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Promo & Informasi',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF570374),
-                      ),
-                    ),
-                    Text(
-                      'Lihat Semua',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFFCA31FF),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 135,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      // Banner 1: Koin Promo
-                      _buildPromoCard(
-                        title: 'KUMPULKAN LEBIH BANYAK POIN!',
-                        subtitle: 'Tukar poin ke uang tunai hingga Rp 100.000',
-                        badgeText: 'XEMA POIN',
-                        color1: const Color(0xFF772096),
-                        color2: const Color(0xFFB952DD),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const KoinScreen()),
-                        ),
-                      ),
-                      // Banner 2: Pulsa Promo
-                      _buildPromoCard(
-                        title: 'Diskon Pulsa s/d 20%!',
-                        subtitle: 'Spesial transaksi isi ulang paket data Telkomsel & Indosat',
-                        badgeText: 'HEMAT',
-                        color1: const Color(0xFF52086B),
-                        color2: const Color(0xFFCA31FF),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
-                        ),
-                      ),
-                      // Banner 3: Emas Promo
-                      _buildPromoCard(
-                        title: 'Investasi Emas Bebas Admin',
-                        subtitle: 'Mulai dari Rp 10.000, gratis biaya admin 5x sebulan',
-                        badgeText: 'INVESTASI',
-                        color1: const Color(0xFF490461),
-                        color2: const Color(0xFFE5A93C),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const GoldScreen()),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 30),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.poppins(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1C0823),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromoCard({
-    required String title,
-    required String subtitle,
-    required String badgeText,
-    required Color color1,
-    required Color color2,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 270,
-        margin: const EdgeInsets.only(right: 14),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [color1, color2],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: color1.withValues(alpha: 0.25),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                badgeText,
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        currentIndex: _currentTabIndex,
-        onTap: (index) {
+  Widget _buildFigmaTabItem({
+    required int index,
+    required String assetPath,
+  }) {
+    final isSelected = _currentTabIndex == index;
+
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
           setState(() {
             _currentTabIndex = index;
           });
         },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFFCA31FF),
-        unselectedItemColor: const Color(0xFF939393),
-        selectedLabelStyle: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: GoogleFonts.poppins(fontSize: 11),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
+        child: Opacity(
+          opacity: isSelected ? 1.0 : 0.65,
+          child: Center(
+            child: Image.asset(
+              assetPath,
+              fit: BoxFit.contain,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_rounded),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on_outlined),
-            label: 'Xema Poin',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
-          ),
-        ],
+        ),
       ),
     );
   }
