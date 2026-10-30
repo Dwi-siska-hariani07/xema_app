@@ -223,57 +223,49 @@ class _TransferScreenState extends State<TransferScreen> {
       'name': 'BAS',
       'fullName': 'Bank Aceh Syariah',
       'acc': '5018273645',
-      'logo': AppIcons.bankListLogo0,
-      'gridBtn': AppIcons.btnGridBas,
+      'logo': AppIcons.logoBas,
     },
     {
       'name': 'BRI',
       'fullName': 'Bank BRI',
       'acc': '0019018273645',
       'logo': AppIcons.logoBri,
-      'gridBtn': AppIcons.btnGridBri,
     },
     {
       'name': 'BSI',
       'fullName': 'Bank Syariah Indonesia (BSI)',
       'acc': '7243567687',
       'logo': AppIcons.logoBsi,
-      'gridBtn': AppIcons.btnGridBsi,
     },
     {
       'name': 'BNI',
       'fullName': 'Bank BNI',
       'acc': '0981726354',
       'logo': AppIcons.logoBni,
-      'gridBtn': AppIcons.btnGridBni,
     },
     {
       'name': 'BTN',
       'fullName': 'Bank BTN',
       'acc': '0001827364501',
       'logo': AppIcons.logoBtn,
-      'gridBtn': AppIcons.btnGridBtn,
     },
     {
       'name': 'MANDIRI',
       'fullName': 'Bank Mandiri',
       'acc': '1370019283748',
       'logo': AppIcons.logoMandiri,
-      'gridBtn': AppIcons.btnGridMandiri,
     },
     {
       'name': 'BCA',
       'fullName': 'Bank BCA',
       'acc': '8801928374',
       'logo': AppIcons.logoBca,
-      'gridBtn': AppIcons.btnGridBca,
     },
     {
       'name': 'SeaBank',
       'fullName': 'SeaBank',
       'acc': '9018273645',
       'logo': AppIcons.logoSeaBank,
-      'gridBtn': AppIcons.btnGridSeaBank,
     },
   ];
 
@@ -283,49 +275,49 @@ class _TransferScreenState extends State<TransferScreen> {
       'name': 'Bank Aceh Syariah',
       'fullName': 'Bank Aceh Syariah',
       'acc': '5018273645',
-      'logo': AppIcons.bankListLogo0,
+      'logo': AppIcons.logoBankAceh,
     },
     {
       'name': 'Bank Banten',
       'fullName': 'Bank Banten',
       'acc': '1382910283',
-      'logo': AppIcons.bankListLogo1,
+      'logo': AppIcons.logoBankBanten,
     },
     {
       'name': 'Bank Bengkulu',
       'fullName': 'Bank Bengkulu',
       'acc': '1482910284',
-      'logo': AppIcons.bankListLogo2,
+      'logo': AppIcons.logoBankBengkulu,
     },
     {
       'name': 'Bank Jabar & Banten (BJB)',
       'fullName': 'Bank Jabar & Banten (BJB)',
       'acc': '1102910285',
-      'logo': AppIcons.bankListLogo3,
+      'logo': AppIcons.logoBankBjb,
     },
     {
       'name': 'Bank Jambi',
       'fullName': 'Bank Jambi',
       'acc': '1582910286',
-      'logo': AppIcons.bankListLogo4,
+      'logo': AppIcons.logoBankJambi,
     },
     {
       'name': 'Bank Jateng',
       'fullName': 'Bank Jateng',
       'acc': '1682910287',
-      'logo': AppIcons.bankListLogo5,
+      'logo': AppIcons.logoBankJateng,
     },
     {
       'name': 'Bank Jatim',
       'fullName': 'Bank Jatim',
       'acc': '1782910288',
-      'logo': AppIcons.bankListLogo6,
+      'logo': AppIcons.logoBankJatim,
     },
     {
       'name': 'Bank Kalbar',
       'fullName': 'Bank Kalbar',
       'acc': '1882910289',
-      'logo': AppIcons.bankListLogo7,
+      'logo': AppIcons.logoBankKalbar,
     },
     {
       'name': 'Bank Kalsel',
@@ -583,14 +575,29 @@ class _TransferScreenState extends State<TransferScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: 44,
-                        height: 34,
-                        child: Center(
-                          child: AppIcons.buildImageOrIcon(
-                            bank['logo']!,
-                            width: 44,
-                            height: 32,
+                      Container(
+                        width: 56,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          child: Center(
+                            child: AppIcons.buildImageOrIcon(
+                              bank['logo']!,
+                              width: 40,
+                              height: 36,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
@@ -622,26 +629,47 @@ class _TransferScreenState extends State<TransferScreen> {
   Widget _buildPopularBankItem(Map<String, String> bank) {
     return InkWell(
       onTap: () => _selectBank(bank),
-      borderRadius: BorderRadius.circular(10),
-      child: bank['gridBtn'] != null
-          ? Image.asset(
-              bank['gridBtn']!,
-              width: 76,
-              height: 62,
-              fit: BoxFit.contain,
-            )
-          : Container(
-              width: 76,
-              height: 62,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFE2E2E2), width: 1),
-              ),
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 72,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Center(
-                child: AppIcons.buildImageOrIcon(bank['logo']!, width: 36, height: 32),
+                child: AppIcons.buildImageOrIcon(
+                  bank['logo']!,
+                  width: 50,
+                  height: 42,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            bank['name']!,
+            style: GoogleFonts.robotoSlab(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
