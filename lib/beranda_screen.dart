@@ -10,6 +10,7 @@ import 'koin_screen.dart';
 import 'history_screen.dart';
 import 'profile_screen.dart';
 import 'notification_screen.dart';
+import 'daftar_menu_screen.dart';
 
 class BerandaScreen extends StatefulWidget {
   const BerandaScreen({super.key});
@@ -322,7 +323,10 @@ class _BerandaScreenState extends State<BerandaScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onTap: () {},
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const DaftarMenuScreen()),
+                                  ),
                                 ),
                               ),
                             ],
@@ -344,6 +348,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
             height: 105 * scale,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: cardPadding),
               itemCount: _bannerAssets.length,
               separatorBuilder: (context, index) => SizedBox(width: 10 * scale),
