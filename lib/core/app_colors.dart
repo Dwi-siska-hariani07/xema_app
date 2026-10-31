@@ -13,6 +13,21 @@ class AppColors {
   static const Color primaryCard = Color(0xFFE9CAF7);
   static const Color primaryCardLight = Color(0xFFF6E1FF);
 
+  // Figma Beranda 2 Specific Palette
+  static const Color headerPurple = Color(0xFFCA31FF);
+  static const Color cardPurpleTop = Color(0xFFCB81F1);
+  static const Color cardPurpleBottom = Color(0xFF851FAB);
+  static const Color profileBadgeBg = Color(0xFF8F46AB);
+  static const Color bottomNavBg = Color(0xFFF3DEFF);
+  static const Color bottomNavIcon = Color(0xFF52006B);
+  static const Color promoYellow = Color(0xFFFFD500);
+  static const Color promoYellowShadow = Color(0xFFB28000);
+  static const Color promoBlue = Color(0xFF29B6F6);
+  static const Color promoBlueShadow = Color(0xFF0277BD);
+  static const Color plnYellow = Color(0xFFFFEB3B);
+  static const Color goldBarColor = Color(0xFFFFB300);
+  static const Color poinCardBorder = Color(0xFFA242C4);
+
   // Backgrounds & Neutrals
   static const Color background = Color(0xFFFFFFFF);
   static const Color darkBackground = Color(0xFF1C0823);
