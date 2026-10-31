@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'top_up_game_diamonds_screen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -9,246 +10,233 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  String _selectedGame = 'Mobile Legends';
-  String _selectedPackage = '50 Diamonds';
-  String _price = 'Rp 14.000';
-  final TextEditingController _userIdController = TextEditingController(text: '12345678');
-  final TextEditingController _zoneIdController = TextEditingController(text: '2001');
-
-  final List<Map<String, dynamic>> _games = [
-    {'name': 'Mobile Legends', 'icon': Icons.flash_on},
-    {'name': 'Free Fire', 'icon': Icons.local_fire_department},
-    {'name': 'PUBG Mobile', 'icon': Icons.military_tech},
-    {'name': 'Roblox', 'icon': Icons.token},
-  ];
-
-  final List<Map<String, String>> _packages = [
-    {'item': '5 Diamonds', 'price': 'Rp 1.000'},
-    {'item': '20 Diamonds', 'price': 'Rp 5.500'},
-    {'item': '50 Diamonds', 'price': 'Rp 14.000'},
-    {'item': '100 Diamonds', 'price': 'Rp 28.000'},
-    {'item': '250 Diamonds', 'price': 'Rp 70.000'},
-    {'item': '500 Diamonds', 'price': 'Rp 140.000'},
-  ];
+  void _onGameSelected(String gameName) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Top Up $gameName',
+                style: GoogleFonts.robotoSlab(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF490B60),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Layanan top up resmi dan instan dengan Saldo Xema.',
+                style: GoogleFonts.robotoSlab(fontSize: 13, color: Colors.grey[700]),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFCA31FF),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  ),
+                  child: Text(
+                    'PILIH NOMINAL',
+                    style: GoogleFonts.robotoSlab(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'Top Up Game',
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF570374),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF570374)),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+      body: SafeArea(
+        top: false,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Pilihan Game
-            Text('Pilih Game', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFF570374))),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 48,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _games.length,
-                itemBuilder: (context, index) {
-                  final g = _games[index];
-                  final isSelected = _selectedGame == g['name'];
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedGame = g['name']),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFFCA31FF) : const Color(0xFFF3D8FF),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(g['icon'] as IconData, size: 18, color: isSelected ? Colors.white : const Color(0xFF570374)),
-                          const SizedBox(width: 6),
-                          Text(
-                            g['name'],
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : const Color(0xFF570374),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Form User ID & Zone ID
+            // ========================================================
+            // 1. TOP BAR / APPBAR FIGMA (GAMBAR ASLI PERSIS GAMBAR 1)
+            // ========================================================
             Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8F5FB),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: const Color(0xFFF3D8FF)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Data Akun Game',
-                    style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF570374)),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Silakan masukkan User ID dan Zone ID Anda (Contoh: 12345678 (2001)).',
-                    style: GoogleFonts.poppins(fontSize: 11, color: const Color(0xFF939393)),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: TextField(
-                          controller: _userIdController,
-                          style: GoogleFonts.robotoSlab(fontSize: 14),
-                          decoration: InputDecoration(
-                            labelText: 'User ID',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 2,
-                        child: TextField(
-                          controller: _zoneIdController,
-                          style: GoogleFonts.robotoSlab(fontSize: 14),
-                          decoration: InputDecoration(
-                            labelText: 'Zone ID',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text('Pilih Item / Nominal', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFF570374))),
-            const SizedBox(height: 12),
-
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 2.2,
-              ),
-              itemCount: _packages.length,
-              itemBuilder: (context, index) {
-                final p = _packages[index];
-                final isSelected = _selectedPackage == p['item'];
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedPackage = p['item']!;
-                      _price = p['price']!;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFFF3D8FF) : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isSelected ? const Color(0xFFCA31FF) : const Color(0xFFE0E0E0),
-                        width: isSelected ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          p['item']!,
-                          style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF1C0823)),
-                        ),
-                        Text(
-                          p['price']!,
-                          style: GoogleFonts.robotoSlab(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFFCA31FF)),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-
-            const SizedBox(height: 35),
-
-            SizedBox(
               width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-                        title: Text('Top Up Berhasil!', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF570374))),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Game: $_selectedGame'),
-                            Text('Akun: ${_userIdController.text} (${_zoneIdController.text})'),
-                            Text('Item: $_selectedPackage'),
-                            Text('Total Bayar: $_price', style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCA31FF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+              color: const Color(0xFFD373FC),
+              child: SafeArea(
+                bottom: false,
+                child: Stack(
+                  children: [
+                    // Gambar Top Bar Asli dari Figma
+                    Image.asset(
+                      'assets/images/top_bar_header.png',
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                    ),
+
+                    // Area Sentuh Tombol Kembali (Di atas tanda panah kiri)
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 12,
+                      width: 72,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text('Beli $_selectedPackage ($_price)', style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
+            ),
+
+            // Konten Utama (Proporsional & Mengisi Layar Penuh Tanpa Ruang Kosong Bawah)
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(), // Layar terkunci dan pas, tidak bisa di-scroll ke bawah
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+
+                    // ========================================================
+                    // 2. BANNER PROMO BISA DIGESER KE KANAN & KIRI (CAROUSEL)
+                    // Ukuran Eksak Figma: W 309, H 100, Corner Radius 10
+                    // ========================================================
+                    SizedBox(
+                      height: 112,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          _buildBannerItem('assets/images/game_banner1.png'),
+                          const SizedBox(width: 14),
+                          _buildBannerItem('assets/images/game_banner2.png'),
+                          const SizedBox(width: 14),
+                          _buildBannerItem('assets/images/game_banner3.png'),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
+
+                    // ========================================================
+                    // 3. JUDUL: Mobile Games (Roboto Slab, Ukuran 32 & Lebih Turun)
+                    // ========================================================
+                    Text(
+                      'Mobile Games',
+                      style: GoogleFonts.robotoSlab(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF490B60),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // ========================================================
+                    // 4. GRID 4 GAME ASLI 100% PERSIS FIGMA (BINTANG, UKURAN & POSISI)
+                    // ========================================================
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final gridWidth = constraints.maxWidth;
+                        // Aspect ratio gambar grid asli dari Figma: 638 x 837
+                        final gridHeight = gridWidth * (837 / 638);
+                        return SizedBox(
+                          width: gridWidth,
+                          height: gridHeight,
+                          child: Stack(
+                            children: [
+                              // Gambar 100% Asli Figma (Bintang, Tata Letak, Ukuran, Font, & Kartu)
+                              Image.asset(
+                                'assets/images/figma_games_grid.png',
+                                width: gridWidth,
+                                height: gridHeight,
+                                fit: BoxFit.fill,
+                              ),
+
+                              // Area Sentuh 1: Mobile Legends: Bang Bang
+                              Positioned(
+                                left: gridWidth * 0.083,
+                                top: gridHeight * 0.056,
+                                width: gridWidth * 0.332,
+                                height: gridHeight * 0.376,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const TopUpGameDiamondsScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+
+                              // Area Sentuh 2: Free Fire
+                              Positioned(
+                                left: gridWidth * 0.547,
+                                top: gridHeight * 0.056,
+                                width: gridWidth * 0.332,
+                                height: gridHeight * 0.329,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => _onGameSelected('Free Fire'),
+                                ),
+                              ),
+
+                              // Area Sentuh 3: Roblox
+                              Positioned(
+                                left: gridWidth * 0.083,
+                                top: gridHeight * 0.577,
+                                width: gridWidth * 0.332,
+                                height: gridHeight * 0.339,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => _onGameSelected('Roblox'),
+                                ),
+                              ),
+
+                              // Area Sentuh 4: PUBG Mobile
+                              Positioned(
+                                left: gridWidth * 0.564,
+                                top: gridHeight * 0.579,
+                                width: gridWidth * 0.334,
+                                height: gridHeight * 0.337,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => _onGameSelected('PUBG Mobile'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
           ],
@@ -256,5 +244,33 @@ class _GameScreenState extends State<GameScreen> {
       ),
     );
   }
+
+  // Widget Item Banner Promo (Ukuran Eksak Figma: W 309, H 100, Radius 10)
+  Widget _buildBannerItem(String assetPath) {
+    return Container(
+      width: 309,
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1F000000), // Shadow hitam halus alami persis Figma
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(
+          assetPath,
+          width: 309,
+          height: 100,
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
 }
+
 
