@@ -29,3 +29,9 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/profile/
+    - assets/fonts/
+
+  fonts:
+    - family: PoltawskiNowy
+      fonts:
+        - asset: assets/fonts/PoltawskiNowy.ttf

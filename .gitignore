@@ -49,3 +49,6 @@ app.*.map.json
 
 # Temporary Figma Renders
 figma_renders/
+
+# Agent workspace and temporary scripts
+.agents/
