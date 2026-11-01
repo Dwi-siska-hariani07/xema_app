@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
@@ -13,6 +13,23 @@ class AppTextStyles {
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
+    );
+  }
+
+  // Serif Style untuk Beranda Figma (LISA ARUNIA, Menu Layanan, Home)
+  static TextStyle figmaSerif({
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.bold,
+    Color color = AppColors.textDark,
+    double letterSpacing = 0.2,
+    double height = 1.0,
+  }) {
+    return GoogleFonts.cormorantGaramond(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      letterSpacing: letterSpacing,
+      height: height,
     );
   }
 
@@ -78,4 +95,3 @@ class AppTextStyles {
     );
   }
 }
-
