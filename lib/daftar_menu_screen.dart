@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'transfer_screen.dart';
 import 'topup_screen.dart';
 import 'ppob_screen.dart';
-import 'game_screen.dart';
 import 'gold_screen.dart';
 import 'ewallet_screen.dart';
+import 'top_up_game_diamonds_screen.dart';
 import 'beranda_screen.dart';
 
 class DaftarMenuScreen extends StatelessWidget {
@@ -13,10 +13,10 @@ class DaftarMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final scale = screenWidth / 373.0;
+    final scale = screenWidth / 360.0;
     
-    // Tinggi Header Ungu Presisi Figma (rasio 120 / 577)
-    final headerHeight = screenWidth * (120.0 / 577.0);
+    // Tinggi header Figma asli = 74dp (skala 360)
+    final figmaHeaderHeight = 74.0 * scale;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -25,65 +25,74 @@ class DaftarMenuScreen extends StatelessWidget {
         child: Column(
           children: [
             // ==================== 1. HEADER UNGU ASLI FIGMA ====================
-            SizedBox(
-              width: screenWidth,
-              height: headerHeight,
-              child: Stack(
-                children: [
-                  // Latar Belakang Header Asli Figma (Motif Bubble + Logo XEMA)
-                  Positioned.fill(
-                    child: Image.asset(
-                      'assets/images/figma_daftar_menu_header_clean_bg.png',
-                      fit: BoxFit.fill,
+            // Latar belakang gelembung memanjang ke status bar tanpa meregangkan motif Figma
+            Stack(
+              children: [
+                // Background yang menyatu ke atas status bar
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).padding.top + figmaHeaderHeight,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/figma_menu_header_seamless_extended_bg.png'),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomCenter,
                     ),
                   ),
+                ),
 
-                  // ==================== TOMBOL KEMBALI (BACK ARROW) ====================
-                  // Area sentuh luas & presisi di pojok kiri atas
-                  Positioned(
-                    left: 2 * scale,
-                    top: (headerHeight / 2) - (32 * scale),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(32 * scale),
-                        splashColor: Colors.white.withValues(alpha: 0.3),
-                        highlightColor: Colors.white.withValues(alpha: 0.15),
-                        onTap: () {
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const BerandaScreen()),
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: 68 * scale,
-                          height: 64 * scale,
-                          alignment: Alignment.center,
-                          child: Image.asset(
-                            'assets/images/figma_daftar_menu_arrow_icon.png',
-                            width: 26 * scale,
-                            height: 24 * scale,
-                            fit: BoxFit.contain,
+                // Area Header Figma 1:1 Presisi di bawah Status Bar
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: figmaHeaderHeight,
+                  child: Stack(
+                    children: [
+                      // Gambar header asli Figma (rasio 360x74 = 1080x222)
+                      Positioned.fill(
+                        child: Image.asset(
+                          'assets/images/figma_menu_header_pure_1080.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+
+                      // Area Klik Tombol Kembali (Back Arrow)
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: 70 * scale,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white.withValues(alpha: 0.35),
+                            highlightColor: Colors.white.withValues(alpha: 0.2),
+                            onTap: () {
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const BerandaScreen()),
+                                );
+                              }
+                            },
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
-            // ==================== JARAK PUTIH PRESISI FIGMA ====================
-            // Gap latar putih asli Figma antara bawah header ungu dan atas kartu menu
-            SizedBox(height: 18 * scale),
+            // ==================== JARAK PUTIH BERSIH FIGMA ====================
+            SizedBox(height: 14 * scale),
 
             // ==================== 2. KARTU MENU LAVENDER 1:1 FIGMA ====================
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20 * scale),
+              padding: EdgeInsets.symmetric(horizontal: 27 * scale),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24 * scale),
@@ -100,28 +109,28 @@ class DaftarMenuScreen extends StatelessWidget {
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       final cardWidth = constraints.maxWidth;
-                      final cardHeight = cardWidth * (634.0 / 304.0);
+                      final cardHeight = cardWidth * (1998.0 / 918.0);
 
                       return SizedBox(
                         width: cardWidth,
                         height: cardHeight,
                         child: Stack(
                           children: [
-                            // Visual Kartu Asli Figma
+                            // Visual Kartu Asli Figma (Bersih tanpa garis ungu)
                             Positioned.fill(
                               child: Image.asset(
-                                'assets/images/figma_daftar_menu_card_rounded.png',
+                                'assets/images/figma_daftar_menu_card_clean.png',
                                 fit: BoxFit.fill,
                               ),
                             ),
 
-                            // ==================== TAP TARGETS FITUR ====================
-                            // 1. TRANSFER BANK (Ikon Bank ungu)
+                            // ==================== DAFTAR INTERAKTIF ====================
+                            // 1. TRANSFER BANK (Ikon Bank Ungu)
                             _buildTapBox(
                               left: cardWidth * (10 / 304),
-                              top: cardHeight * (35 / 634),
+                              top: cardHeight * (18 / 617),
                               width: cardWidth * (75 / 304),
-                              height: cardHeight * (75 / 634),
+                              height: cardHeight * (75 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
@@ -131,9 +140,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // SeaBank
                             _buildTapBox(
                               left: cardWidth * (95 / 304),
-                              top: cardHeight * (32 / 634),
+                              top: cardHeight * (15 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (42 / 634),
+                              height: cardHeight * (42 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
@@ -143,9 +152,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // Bank BRI
                             _buildTapBox(
                               left: cardWidth * (195 / 304),
-                              top: cardHeight * (32 / 634),
+                              top: cardHeight * (15 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (42 / 634),
+                              height: cardHeight * (42 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
@@ -155,9 +164,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // BCA
                             _buildTapBox(
                               left: cardWidth * (95 / 304),
-                              top: cardHeight * (76 / 634),
+                              top: cardHeight * (59 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (42 / 634),
+                              height: cardHeight * (42 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
@@ -167,21 +176,21 @@ class DaftarMenuScreen extends StatelessWidget {
                             // BSI
                             _buildTapBox(
                               left: cardWidth * (195 / 304),
-                              top: cardHeight * (76 / 634),
+                              top: cardHeight * (59 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (42 / 634),
+                              height: cardHeight * (42 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
                               ),
                             ),
 
-                            // 2. TRANSFER E-WALLET (Ikon Wallet ungu)
+                            // 2. TRANSFER E-WALLET (Ikon Wallet Ungu)
                             _buildTapBox(
                               left: cardWidth * (10 / 304),
-                              top: cardHeight * (120 / 634),
+                              top: cardHeight * (103 / 617),
                               width: cardWidth * (75 / 304),
-                              height: cardHeight * (80 / 634),
+                              height: cardHeight * (80 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const EwalletScreen()),
@@ -191,9 +200,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // DANA
                             _buildTapBox(
                               left: cardWidth * (95 / 304),
-                              top: cardHeight * (122 / 634),
+                              top: cardHeight * (105 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (40 / 634),
+                              height: cardHeight * (40 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const EwalletScreen()),
@@ -203,9 +212,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // xema
                             _buildTapBox(
                               left: cardWidth * (195 / 304),
-                              top: cardHeight * (122 / 634),
+                              top: cardHeight * (105 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (40 / 634),
+                              height: cardHeight * (40 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TransferScreen()),
@@ -215,9 +224,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // GoPay
                             _buildTapBox(
                               left: cardWidth * (95 / 304),
-                              top: cardHeight * (164 / 634),
+                              top: cardHeight * (147 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (40 / 634),
+                              height: cardHeight * (40 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const EwalletScreen()),
@@ -227,9 +236,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // ShopeePay
                             _buildTapBox(
                               left: cardWidth * (195 / 304),
-                              top: cardHeight * (164 / 634),
+                              top: cardHeight * (147 / 617),
                               width: cardWidth * (95 / 304),
-                              height: cardHeight * (40 / 634),
+                              height: cardHeight * (40 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const EwalletScreen()),
@@ -239,9 +248,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // 3. ISI SALDO (Indomaret & Alfamart)
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (235 / 634),
+                              top: cardHeight * (218 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (48 / 634),
+                              height: cardHeight * (48 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TopUpScreen()),
@@ -250,9 +259,9 @@ class DaftarMenuScreen extends StatelessWidget {
 
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (235 / 634),
+                              top: cardHeight * (218 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (48 / 634),
+                              height: cardHeight * (48 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TopUpScreen()),
@@ -262,9 +271,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // 4. PULSA & KUOTA (Telkomsel)
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (310 / 634),
+                              top: cardHeight * (293 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (45 / 634),
+                              height: cardHeight * (45 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
@@ -272,73 +281,97 @@ class DaftarMenuScreen extends StatelessWidget {
                             ),
 
                             // 5. TOP UP GAME
-                            // Mobile Legends Bang Bang
+                            // Mobile Legends Bang Bang (Langsung ke Pilih Diamonds MLBB)
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (395 / 634),
+                              top: cardHeight * (378 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (50 / 617),
                               onTap: () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => const GameScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const TopUpGameDiamondsScreen(
+                                    gameName: 'Mobile Legends:',
+                                    gameSubtitle: 'Bang Bang',
+                                    gameIcon: 'assets/images/game_mlbb.png',
+                                  ),
+                                ),
                               ),
                             ),
 
-                            // Free Fire
+                            // Free Fire (Langsung ke Pilih Diamonds FF)
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (395 / 634),
+                              top: cardHeight * (378 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (50 / 617),
                               onTap: () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => const GameScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const TopUpGameDiamondsScreen(
+                                    gameName: 'Free Fire',
+                                    gameSubtitle: 'Garena',
+                                    gameIcon: 'assets/images/game_ff.png',
+                                  ),
+                                ),
                               ),
                             ),
 
-                            // PUBG Mobile
+                            // PUBG Mobile (Langsung ke Pilih UC PUBG)
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (448 / 634),
+                              top: cardHeight * (431 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (50 / 617),
                               onTap: () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => const GameScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const TopUpGameDiamondsScreen(
+                                    gameName: 'PUBG Mobile',
+                                    gameSubtitle: 'Level Infinite',
+                                    gameIcon: 'assets/images/game_pubg.png',
+                                  ),
+                                ),
                               ),
                             ),
 
-                            // Roblox
+                            // Roblox (Langsung ke Pilih Robux Roblox)
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (448 / 634),
+                              top: cardHeight * (431 / 617),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (50 / 617),
                               onTap: () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => const GameScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const TopUpGameDiamondsScreen(
+                                    gameName: 'Roblox',
+                                    gameSubtitle: 'Roblox Corporation',
+                                    gameIcon: 'assets/images/game_roblox.png',
+                                  ),
+                                ),
                               ),
                             ),
 
                             // 6. BELI EMAS & LISTRIK
-                            // EMAS
+                            // EMAS (Langsung ke Investasi Emas)
                             _buildTapBox(
                               left: cardWidth * (35 / 304),
-                              top: cardHeight * (535 / 634),
+                              top: cardHeight * (518 / 617),
                               width: cardWidth * (110 / 304),
-                              height: cardHeight * (55 / 634),
+                              height: cardHeight * (55 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GoldScreen()),
                               ),
                             ),
 
-                            // LISTRIK
+                            // LISTRIK (Langsung ke Layanan Listrik PLN)
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (535 / 634),
+                              top: cardHeight * (518 / 617),
                               width: cardWidth * (110 / 304),
-                              height: cardHeight * (55 / 634),
+                              height: cardHeight * (55 / 617),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 1)),
@@ -353,8 +386,8 @@ class DaftarMenuScreen extends StatelessWidget {
               ),
             ),
 
-            // Jarak putih presisi di bagian bawah sesuai Figma
-            SizedBox(height: 42 * scale),
+            // Jarak putih bawah
+            SizedBox(height: 40 * scale),
           ],
         ),
       ),
