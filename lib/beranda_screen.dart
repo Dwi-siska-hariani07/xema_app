@@ -8,7 +8,7 @@ import 'gold_screen.dart';
 import 'game_screen.dart';
 import 'koin_screen.dart';
 import 'history_screen.dart';
-import 'profile_screen.dart';
+import 'user_profile_tab_screen.dart';
 import 'notification_screen.dart';
 import 'daftar_menu_screen.dart';
 
@@ -47,7 +47,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
       case 2:
         return const NotificationScreen();
       case 3:
-        return const ProfileScreen();
+        return const UserProfileTabScreen();
       default:
         return _buildHomeTab();
     }
