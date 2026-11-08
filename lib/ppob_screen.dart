@@ -2469,11 +2469,13 @@ class BuktiTransaksiPulsaScreen extends StatelessWidget {
 class _AnimatedNominalCard extends StatefulWidget {
   final Map<String, dynamic> item;
   final bool isSelected;
+  final bool isEnabled;
   final VoidCallback onTap;
 
   const _AnimatedNominalCard({
     required this.item,
     required this.isSelected,
+    this.isEnabled = true,
     required this.onTap,
   });
 
@@ -2487,93 +2489,109 @@ class _AnimatedNominalCardState extends State<_AnimatedNominalCard> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isActive = _isHovered || _isPressed || widget.isSelected;
+    final bool isActive = widget.isEnabled && (_isHovered || _isPressed || widget.isSelected);
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      cursor: widget.isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onEnter: (_) {
+        if (widget.isEnabled) setState(() => _isHovered = true);
+      },
+      onExit: (_) {
+        if (widget.isEnabled) setState(() => _isHovered = false);
+      },
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
+        onTapDown: (_) {
+          if (widget.isEnabled) setState(() => _isPressed = true);
+        },
+        onTapUp: (_) {
+          if (widget.isEnabled) setState(() => _isPressed = false);
+        },
+        onTapCancel: () {
+          if (widget.isEnabled) setState(() => _isPressed = false);
+        },
         onTap: () {
-          HapticFeedback.lightImpact();
+          if (widget.isEnabled) {
+            HapticFeedback.lightImpact();
+          }
           widget.onTap();
         },
-        child: AnimatedScale(
-          scale: _isPressed ? 0.96 : (_isHovered ? 1.025 : 1.0),
-          duration: const Duration(milliseconds: 140),
-          curve: Curves.easeOutCubic,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+        child: AnimatedOpacity(
+          opacity: widget.isEnabled ? 1.0 : 0.65,
+          duration: const Duration(milliseconds: 200),
+          child: AnimatedScale(
+            scale: widget.isEnabled && _isPressed ? 0.96 : (widget.isEnabled && _isHovered ? 1.025 : 1.0),
+            duration: const Duration(milliseconds: 140),
             curve: Curves.easeOutCubic,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: isActive ? const Color(0xFFF0D0FF) : const Color(0xFFF3D8FF),
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(
-                color: const Color(0xFFCA31FF),
-                width: isActive ? 2.5 : 1.0,
-              ),
-              boxShadow: isActive
-                  ? const [
-                      BoxShadow(
-                        color: Color(0x66CA31FF), // Glowing vibrant purple shadow
-                        blurRadius: 12,
-                        spreadRadius: 1,
-                        offset: Offset(0, 4),
-                      ),
-                      BoxShadow(
-                        color: Color(0x26000000),
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                      ),
-                    ]
-                  : const [
-                      BoxShadow(
-                        color: Color(0x26000000),
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.item['nominal'],
-                  style: GoogleFonts.poltawskiNowy(
-                    textStyle: const TextStyle(fontFamily: 'PoltawskiNowy'),
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF000000),
-                  ),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isActive ? const Color(0xFFF0D0FF) : const Color(0xFFF3D8FF),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: const Color(0xFFCA31FF),
+                  width: isActive ? 2.5 : 1.0,
                 ),
-                const SizedBox(height: 3),
-                if (widget.item['hasDiscount']) ...[
+                boxShadow: isActive
+                    ? const [
+                        BoxShadow(
+                          color: Color(0x66CA31FF), // Glowing vibrant purple shadow
+                          blurRadius: 12,
+                          spreadRadius: 1,
+                          offset: Offset(0, 4),
+                        ),
+                        BoxShadow(
+                          color: Color(0x26000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ]
+                    : const [
+                        BoxShadow(
+                          color: Color(0x26000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    widget.item['original'],
+                    widget.item['nominal'],
                     style: GoogleFonts.poltawskiNowy(
                       textStyle: const TextStyle(fontFamily: 'PoltawskiNowy'),
-                      fontSize: 11,
-                      color: const Color(0xFF9C9C9C),
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: const Color(0xFF9C9C9C),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  if (widget.item['hasDiscount']) ...[
+                    Text(
+                      widget.item['original'],
+                      style: GoogleFonts.poltawskiNowy(
+                        textStyle: const TextStyle(fontFamily: 'PoltawskiNowy'),
+                        fontSize: 11,
+                        color: const Color(0xFF9C9C9C),
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: const Color(0xFF9C9C9C),
+                      ),
+                    ),
+                  ],
+                  Text(
+                    widget.item['discount'],
+                    style: GoogleFonts.poltawskiNowy(
+                      textStyle: const TextStyle(fontFamily: 'PoltawskiNowy'),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF000000),
                     ),
                   ),
                 ],
-                Text(
-                  widget.item['discount'],
-                  style: GoogleFonts.poltawskiNowy(
-                    textStyle: const TextStyle(fontFamily: 'PoltawskiNowy'),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF000000),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -2657,6 +2675,14 @@ class _ListrikScreenState extends State<ListrikScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _meterController.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
     _meterController.dispose();
     _meterFocusNode.dispose();
@@ -2680,9 +2706,43 @@ class _ListrikScreenState extends State<ListrikScreen> {
     }
   }
 
+  void _showWarningMasukanNomorMeter() {
+    HapticFeedback.heavyImpact();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Harap masukkan nomor meteran dulu!',
+                style: GoogleFonts.robotoSlab(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFFC764F6),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   void _proceedToTagihanConfirmation() {
+    if (_meterController.text.trim().isEmpty) {
+      _showWarningMasukanNomorMeter();
+      return;
+    }
     HapticFeedback.mediumImpact();
-    final idPel = _meterController.text.trim().isEmpty ? '1718800221359' : _meterController.text.trim();
+    final idPel = _meterController.text.trim();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -3182,17 +3242,24 @@ class _ListrikScreenState extends State<ListrikScreen> {
                           itemBuilder: (context, index) {
                             final item = _denominations[index];
                             final isSelected = _selectedNominal == item['nominal'];
+                            final hasMeterNumber = _meterController.text.trim().isNotEmpty;
 
                             return _AnimatedNominalCard(
                               item: item,
                               isSelected: isSelected,
+                              isEnabled: hasMeterNumber,
                               onTap: () async {
+                                if (!hasMeterNumber) {
+                                  _showWarningMasukanNomorMeter();
+                                  return;
+                                }
+
                                 setState(() {
                                   _selectedNominal = item['nominal'];
                                 });
                                 await Future.delayed(const Duration(milliseconds: 100));
                                 if (!mounted || !context.mounted) return;
-                                final meterNo = _meterController.text.trim().isEmpty ? '45994543223' : _meterController.text.trim();
+                                final meterNo = _meterController.text.trim();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
