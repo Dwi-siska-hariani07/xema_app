@@ -1110,12 +1110,12 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
   final List<Map<String, dynamic>> _pulsaItems = [
     {'title': '15.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp16.500', 'basePrice': 16500},
     {'title': '25.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp26.500', 'basePrice': 26500},
-    {'title': '50.000', 'badge': '45 hari', 'subtitle': 'Masa aktif 45 hari', 'price': 'Rp50.500', 'basePrice': 50500},
-    {'title': '100.000', 'badge': '60 hari', 'subtitle': 'Masa aktif 60 hari', 'price': 'Rp99.000', 'basePrice': 99000},
-    {'title': '150.000', 'badge': '75 hari', 'subtitle': 'Masa aktif 75 hari', 'price': 'Rp148.500', 'basePrice': 148500},
-    {'title': '200.000', 'badge': '90 hari', 'subtitle': 'Masa aktif 90 hari', 'price': 'Rp198.000', 'basePrice': 198000},
-    {'title': '300.000', 'badge': '120 hari', 'subtitle': 'Masa aktif 120 hari', 'price': 'Rp297.000', 'basePrice': 297000},
-    {'title': '500.000', 'badge': '150 hari', 'subtitle': 'Masa aktif 150 hari', 'price': 'Rp495.000', 'basePrice': 495000},
+    {'title': '50.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp50.500', 'basePrice': 50500},
+    {'title': '100.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp99.000', 'basePrice': 99000},
+    {'title': '150.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp148.500', 'basePrice': 148500},
+    {'title': '200.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp198.000', 'basePrice': 198000},
+    {'title': '300.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp297.000', 'basePrice': 297000},
+    {'title': '500.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp495.000', 'basePrice': 495000},
   ];
 
   // Daftar Paket Data Kuota Telkomsel (8 Pilihan)
