@@ -412,11 +412,12 @@ class _BerandaScreenState extends State<BerandaScreen> {
   Widget _buildBottomNav() {
     final screenWidth = MediaQuery.of(context).size.width;
     final scale = screenWidth / 373.0;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
-      color: const Color(0xFFF3D8FF),
-      child: SafeArea(
-        top: false,
+      color: const Color(0xFFF3D8FF), // Warna ungu mengisi penuh sampai dasar layar
+      child: Padding(
+        padding: EdgeInsets.only(bottom: bottomPadding),
         child: SizedBox(
           height: 64 * scale,
           child: Row(
