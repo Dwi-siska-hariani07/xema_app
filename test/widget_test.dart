@@ -14,7 +14,7 @@ void main() {
   testWidgets('App launches with SplashScreen', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     expect(find.byType(SplashScreen), findsOneWidget);
-    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 5000));
     await tester.pumpAndSettle();
   });
 }
