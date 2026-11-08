@@ -909,9 +909,9 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
                               size: 22,
                             ),
                             const SizedBox(width: 10),
-                            // Garis ujung kiri hanya tampil saat nomor masih kosong.
-                            // Saat mulai diisi angka, garis ini hilang digantikan angka yang diisi.
-                            if (_phone.isEmpty) ...[
+                            // Garis ungu vertikal indikator input:
+                            // Hanya tampil jika nomor masih kosong DAN keypad/keyboard sedang aktif dibuka
+                            if (_isKeypadOpen && _phone.isEmpty) ...[
                               Container(
                                 width: 1.5,
                                 height: 22,
@@ -924,7 +924,9 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      _phone.isEmpty ? 'Masukan Nomor Handphone' : _phone,
+                                      _phone.isEmpty
+                                          ? (_isKeypadOpen ? '' : 'Masukan Nomor Handphone')
+                                          : _phone,
                                       style: GoogleFonts.robotoSlab(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -936,8 +938,8 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  // Kursor indikator aktif saat keyboard terbuka
-                                  if (_isKeypadOpen)
+                                  // Kursor indikator aktif saat keyboard terbuka dan nomor sudah ada isinya
+                                  if (_isKeypadOpen && _phone.isNotEmpty)
                                     Container(
                                       width: 2,
                                       height: 20,
@@ -1106,16 +1108,16 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
   late String _currentPhone;
   bool _isKeypadOpen = false;
 
-  // Daftar Nominal Pulsa Telkomsel (8 Pilihan)
+  // Daftar Nominal Pulsa Telkomsel (8 Pilihan) persis Node Figma 165-215
   final List<Map<String, dynamic>> _pulsaItems = [
-    {'title': '15.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp16.500', 'basePrice': 16500},
-    {'title': '25.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp26.500', 'basePrice': 26500},
-    {'title': '50.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp50.500', 'basePrice': 50500},
-    {'title': '100.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp99.000', 'basePrice': 99000},
-    {'title': '150.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp148.500', 'basePrice': 148500},
-    {'title': '200.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp198.000', 'basePrice': 198000},
-    {'title': '300.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp297.000', 'basePrice': 297000},
-    {'title': '500.000', 'badge': '30 hari', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp495.000', 'basePrice': 495000},
+    {'title': '10rb', 'badge': '3 hari', 'subtitle': '', 'price': 'Rp12.500', 'basePrice': 12500},
+    {'title': '20rb', 'badge': '7 hari', 'subtitle': '', 'price': 'Rp25.000', 'basePrice': 25000},
+    {'title': '30rb', 'badge': '10 hari', 'subtitle': '', 'price': 'Rp33.000', 'basePrice': 33000},
+    {'title': '45rb', 'badge': '28 hari', 'subtitle': '', 'price': 'Rp46.000', 'basePrice': 46000},
+    {'title': '50rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp52.500', 'basePrice': 52500},
+    {'title': '75rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp77.000', 'basePrice': 77000},
+    {'title': '100rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp105.000', 'basePrice': 105000},
+    {'title': '200rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp210.000', 'basePrice': 210000},
   ];
 
   // Daftar Paket Data Kuota Telkomsel (8 Pilihan)
@@ -1426,12 +1428,23 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
                       children: [
                         _buildTelkomselLogo(size: 30),
                         const SizedBox(width: 14),
+                        // Garis ungu indikator cursor: hanya muncul jika keypad aktif dan nomor kosong
+                        if (_isKeypadOpen && _currentPhone.isEmpty) ...[
+                          Container(
+                            width: 1.5,
+                            height: 22,
+                            color: const Color(0xFF52086B),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
                         Expanded(
                           child: Row(
                             children: [
                               Flexible(
                                 child: Text(
-                                  _currentPhone.isEmpty ? 'Masukan Nomor Handphone' : _currentPhone,
+                                  _currentPhone.isEmpty
+                                      ? (_isKeypadOpen ? '' : 'Masukan Nomor Handphone')
+                                      : _currentPhone,
                                   style: GoogleFonts.robotoSlab(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
@@ -1443,7 +1456,8 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              if (_isKeypadOpen)
+                              // Kursor aktif saat keyboard terbuka dan nomor ada isinya
+                              if (_isKeypadOpen && _currentPhone.isNotEmpty)
                                 Container(
                                   width: 2,
                                   height: 20,
