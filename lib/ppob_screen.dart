@@ -664,9 +664,66 @@ class PulsaInputScreen extends StatefulWidget {
 }
 
 class _PulsaInputScreenState extends State<PulsaInputScreen> {
-  String _phone = '085189898989';
+  String _phone = '';
+  bool _isKeypadOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(_handleHardwareKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
+    super.dispose();
+  }
+
+  // Dukungan input keyboard fisik laptop/PC & keypad layar HP
+  bool _handleHardwareKey(KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return false;
+
+    final key = event.logicalKey;
+    final char = event.character;
+
+    // Backspace / Delete
+    if (key == LogicalKeyboardKey.backspace || key == LogicalKeyboardKey.delete) {
+      _onBackspace();
+      return true;
+    }
+
+    // Angka 0-9
+    if (char != null && RegExp(r'^[0-9]$').hasMatch(char)) {
+      if (!_isKeypadOpen) {
+        setState(() => _isKeypadOpen = true);
+      }
+      _onKeyPress(char);
+      return true;
+    }
+
+    // Enter / Numpad Enter -> Lanjut ke katalog jika nomor tidak kosong
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.numpadEnter) {
+      if (_phone.isNotEmpty) {
+        _goToCatalog();
+      } else {
+        setState(() => _isKeypadOpen = false);
+      }
+      return true;
+    }
+
+    // Escape -> Tutup keypad
+    if (key == LogicalKeyboardKey.escape) {
+      if (_isKeypadOpen) {
+        setState(() => _isKeypadOpen = false);
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   void _onKeyPress(String val) {
+    if (_phone.length >= 16) return;
     HapticFeedback.lightImpact();
     setState(() {
       _phone += val;
@@ -684,11 +741,28 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
 
   void _goToCatalog() {
     HapticFeedback.mediumImpact();
-    final number = _phone.isEmpty ? '085189898989' : _phone;
+    if (_phone.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Silakan masukkan nomor handphone terlebih dahulu',
+            style: GoogleFonts.robotoSlab(),
+          ),
+          backgroundColor: const Color(0xFF52086B),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _isKeypadOpen = false;
+    });
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => PulsaCatalogScreen(phoneNumber: number),
+        builder: (_) => PulsaCatalogScreen(phoneNumber: _phone),
       ),
     );
   }
@@ -732,202 +806,274 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD373FC),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF52086B), size: 28),
-          onPressed: () => Navigator.pop(context),
-        ),
-        titleSpacing: 0,
-        title: Text(
-          'Pulsa & Paket Data',
-          style: GoogleFonts.robotoSlab(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF52086B),
+    return PopScope(
+      canPop: !_isKeypadOpen,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_isKeypadOpen) {
+          setState(() => _isKeypadOpen = false);
+          return;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFD373FC),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF52086B), size: 28),
+            onPressed: () {
+              if (_isKeypadOpen) {
+                setState(() => _isKeypadOpen = false);
+                return;
+              }
+              Navigator.pop(context);
+            },
           ),
-        ),
-        centerTitle: false,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 18),
-            child: Center(
-              child: CustomPaint(
-                size: Size(26, 26),
-                painter: _PhoneWifiIconPainter(),
-              ),
+          titleSpacing: 0,
+          title: Text(
+            'Pulsa & Paket Data',
+            style: GoogleFonts.robotoSlab(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF52086B),
             ),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Bagian Atas: Label & Input Nomor Handphone
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Nomor Handphone',
-                  style: GoogleFonts.robotoSlab(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1C0823),
-                  ),
+          centerTitle: false,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: 18),
+              child: Center(
+                child: CustomPaint(
+                  size: Size(26, 26),
+                  painter: _PhoneWifiIconPainter(),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  height: 54,
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE2C8EF), width: 1.3),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x0C000000),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
+              ),
+            ),
+          ],
+        ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            if (_isKeypadOpen) {
+              setState(() => _isKeypadOpen = false);
+            }
+          },
+          child: Column(
+            children: [
+              // Bagian Atas: Label & Input Nomor Handphone (Kotak Abu-Abu)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Nomor Handphone',
+                      style: GoogleFonts.robotoSlab(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1C0823),
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.phone_android_rounded,
-                        color: Color(0xFF1C0823),
-                        size: 22,
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 1.5,
-                        height: 22,
-                        color: const Color(0xFF52086B),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _phone.isEmpty ? 'Masukan Nomor Handphone' : _phone,
-                          style: GoogleFonts.robotoSlab(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: _phone.isEmpty ? const Color(0xFFBDBDBD) : const Color(0xFF1C0823),
-                            letterSpacing: 0.5,
-                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Retangle Abu-Abu: Klik untuk buka/tutup keyboard
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        setState(() {
+                          _isKeypadOpen = !_isKeypadOpen;
+                        });
+                      },
+                      child: Container(
+                        height: 56,
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFAEADAD),
+                          borderRadius: BorderRadius.circular(10),
+                          border: _isKeypadOpen
+                              ? Border.all(color: const Color(0xFF52086B), width: 2)
+                              : null,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x0C000000),
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.phone_android_rounded,
+                              color: Color(0xFF1C0823),
+                              size: 22,
+                            ),
+                            const SizedBox(width: 10),
+                            Container(
+                              width: 1.5,
+                              height: 22,
+                              color: const Color(0xFF52086B),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      _phone.isEmpty ? 'Masukan Nomor Handphone' : _phone,
+                                      style: GoogleFonts.robotoSlab(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: _phone.isEmpty
+                                            ? const Color(0xFF4A4A4A)
+                                            : const Color(0xFF1C0823),
+                                        letterSpacing: 0.5,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  // Kursor indikator aktif saat keyboard terbuka
+                                  if (_isKeypadOpen)
+                                    Container(
+                                      width: 2,
+                                      height: 20,
+                                      margin: const EdgeInsets.only(left: 3),
+                                      color: const Color(0xFF52086B),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            if (_phone.isNotEmpty)
+                              GestureDetector(
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  setState(() {
+                                    _phone = '';
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 6),
+                                  child: Icon(Icons.cancel, color: Color(0xFF52086B), size: 18),
+                                ),
+                              ),
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                setState(() {
+                                  _phone = '085189898989';
+                                  _isKeypadOpen = true;
+                                });
+                              },
+                              child: _buildContactBookIcon(width: 22, height: 24),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          setState(() {
-                            _phone = '085189898989';
-                          });
-                        },
-                        child: _buildContactBookIcon(width: 22, height: 24),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              // Tombol Melayang Ceklis Ungu di Atas Keypad (Persis Desain Figma)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 12),
+                  child: InkWell(
+                    onTap: _goToCatalog,
+                    borderRadius: BorderRadius.circular(26),
+                    child: Container(
+                      width: 52,
+                      height: 52,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFCA31FF),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x60CA31FF),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                    ],
+                      child: const Center(
+                        child: Icon(Icons.check, color: Colors.white, size: 28),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
 
-          const Spacer(),
-
-          // Tombol Melayang Ceklis Ungu di Atas Keypad (Persis Desain Figma)
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 12),
-              child: InkWell(
-                onTap: _goToCatalog,
-                borderRadius: BorderRadius.circular(26),
-                child: Container(
-                  width: 52,
-                  height: 52,
+              // Custom Numeric Keypad 4x4 (Muncul saat kotak abu-abu diklik)
+              if (_isKeypadOpen)
+                Container(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
                   decoration: const BoxDecoration(
-                    color: Color(0xFFCA31FF),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x60CA31FF),
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+                    color: Color(0xFFD9D9D9),
                   ),
-                  child: const Center(
-                    child: Icon(Icons.check, color: Colors.white, size: 28),
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            _buildKeypadButton('1'),
+                            _buildKeypadButton('2'),
+                            _buildKeypadButton('3'),
+                            _buildKeypadButton('-', onTap: () => _onKeyPress('-')),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            _buildKeypadButton('4'),
+                            _buildKeypadButton('5'),
+                            _buildKeypadButton('6'),
+                            _buildKeypadButton(
+                              '_',
+                              onTap: _onBackspace,
+                              customChild: const Icon(Icons.remove, color: Color(0xFF1C0823), size: 22),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            _buildKeypadButton('7'),
+                            _buildKeypadButton('8'),
+                            _buildKeypadButton('9'),
+                            _buildKeypadButton(
+                              '⌫',
+                              onTap: _onBackspace,
+                              customChild: const Icon(Icons.backspace_outlined, color: Color(0xFF1C0823), size: 20),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            _buildKeypadButton(',', onTap: () => _onKeyPress(',')),
+                            _buildKeypadButton('0'),
+                            _buildKeypadButton('.', onTap: () => _onKeyPress('.')),
+                            _buildKeypadButton(
+                              '✓',
+                              onTap: _goToCatalog,
+                              customChild: const Icon(Icons.check, color: Color(0xFF1C0823), size: 24),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              if (!_isKeypadOpen)
+                const SafeArea(
+                  top: false,
+                  child: SizedBox(height: 8),
+                ),
+            ],
           ),
-
-          // Custom Numeric Keypad 4x4 (Persis Figma)
-          Container(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
-            decoration: const BoxDecoration(
-              color: Color(0xFFD9D9D9),
-            ),
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      _buildKeypadButton('1'),
-                      _buildKeypadButton('2'),
-                      _buildKeypadButton('3'),
-                      _buildKeypadButton('-', onTap: () => _onKeyPress('-')),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _buildKeypadButton('4'),
-                      _buildKeypadButton('5'),
-                      _buildKeypadButton('6'),
-                      _buildKeypadButton(
-                        '_',
-                        onTap: _onBackspace,
-                        customChild: const Icon(Icons.remove, color: Color(0xFF1C0823), size: 22),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _buildKeypadButton('7'),
-                      _buildKeypadButton('8'),
-                      _buildKeypadButton('9'),
-                      _buildKeypadButton(
-                        '⌫',
-                        onTap: _onBackspace,
-                        customChild: const Icon(Icons.backspace_outlined, color: Color(0xFF1C0823), size: 20),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _buildKeypadButton(',', onTap: () => _onKeyPress(',')),
-                      _buildKeypadButton('0'),
-                      _buildKeypadButton('.', onTap: () => _onKeyPress('.')),
-                      _buildKeypadButton(
-                        '✓',
-                        onTap: _goToCatalog,
-                        customChild: const Icon(Icons.check, color: Color(0xFF1C0823), size: 24),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
