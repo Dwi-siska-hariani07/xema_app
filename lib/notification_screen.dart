@@ -61,29 +61,25 @@ class _NotificationScreenState extends State<NotificationScreen>
   // ===========================================================================
   // 1. HEADER SECTION (FIGMA: Node 1489-1757)
   // Background putih bersih dengan bentuk elips ungu muda presisi 100% dari Figma
+  // Full-bleed memenuhi status bar sampai bagian paling atas layar
   // ===========================================================================
   Widget _buildFigmaHeader(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double headerHeight = 135.0 + statusBarHeight;
+    final double headerHeight = 125.0 + statusBarHeight;
 
     return Container(
       width: double.infinity,
       height: headerHeight,
       color: Colors.white,
       child: Stack(
-        clipBehavior: Clip.none,
+        fit: StackFit.expand,
         children: [
-          // Gambar Header Asli Figma (Posisi, Ukuran, Bentuk Elips 100% Identik)
-          Positioned(
-            top: statusBarHeight - 10,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/figma_rectangle_header_bg.png',
-              width: double.infinity,
-              fit: BoxFit.fill,
-            ),
+          // Gambar Header Asli Figma memenuhi frame paling atas layar tanpa celah
+          Image.asset(
+            'assets/images/figma_rectangle_header_bg.png',
+            width: double.infinity,
+            height: headerHeight,
+            fit: BoxFit.fill,
           ),
 
           // Garis horizontal pembatas bawah header (Figma stroke: 1px hitam 20%)

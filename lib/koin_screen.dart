@@ -254,7 +254,12 @@ class _KoinScreenState extends State<KoinScreen> {
                                           ),
                                           actions: [
                                             TextButton(
-                                              onPressed: () => Navigator.pop(context),
+                                              onPressed: () {
+                                                // Tutup dialog
+                                                Navigator.pop(context);
+                                                // Kembali ke halaman Beranda
+                                                Navigator.pop(context);
+                                              },
                                               child: Text(
                                                 'OK',
                                                 style: GoogleFonts.robotoSlab(
