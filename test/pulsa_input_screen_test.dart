@@ -50,5 +50,19 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(find.byType(PulsaCatalogScreen), findsOneWidget);
+
+    // 7. Di PulsaCatalogScreen: Kotak abu-abu nomor HP bisa diklik & diedit
+    expect(find.text('0812'), findsOneWidget);
+    // Klik kotak abu-abu nomor di katalog
+    await tester.tap(find.text('0812'));
+    await tester.pumpAndSettle();
+
+    // Keypad muncul di katalog
+    expect(find.byIcon(Icons.backspace_outlined), findsOneWidget);
+
+    // Ketik angka baru di katalog
+    await tester.tap(find.text('9'));
+    await tester.pumpAndSettle();
+    expect(find.text('08129'), findsOneWidget);
   });
 }

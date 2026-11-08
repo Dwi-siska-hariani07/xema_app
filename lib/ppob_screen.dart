@@ -909,12 +909,16 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
                               size: 22,
                             ),
                             const SizedBox(width: 10),
-                            Container(
-                              width: 1.5,
-                              height: 22,
-                              color: const Color(0xFF52086B),
-                            ),
-                            const SizedBox(width: 10),
+                            // Garis ujung kiri hanya tampil saat nomor masih kosong.
+                            // Saat mulai diisi angka, garis ini hilang digantikan angka yang diisi.
+                            if (_phone.isEmpty) ...[
+                              Container(
+                                width: 1.5,
+                                height: 22,
+                                color: const Color(0xFF52086B),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
                             Expanded(
                               child: Row(
                                 children: [
@@ -1098,25 +1102,27 @@ class PulsaCatalogScreen extends StatefulWidget {
 }
 
 class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
-  late int _selectedTab;
+  int _selectedTab = 0; // 0: Pulsa, 1: Paket Data
+  late String _currentPhone;
+  bool _isKeypadOpen = false;
 
-    // 8 Item Pulsa Persis Desain Figma
-  List<Map<String, dynamic>> get _pulsaItems => const [
-    {'title': '10rb', 'badge': '3 hari', 'subtitle': '', 'price': 'Rp12.500', 'basePrice': 10000},
-    {'title': '20rb', 'badge': '7 hari', 'subtitle': '', 'price': 'Rp25.000', 'basePrice': 20000},
-    {'title': '30rb', 'badge': '10 hari', 'subtitle': '', 'price': 'Rp33.000', 'basePrice': 30000},
-    {'title': '45rb', 'badge': '28 hari', 'subtitle': '', 'price': 'Rp46.000', 'basePrice': 45000},
-    {'title': '50rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp52.500', 'basePrice': 50000},
-    {'title': '75rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp77.000', 'basePrice': 75000},
-    {'title': '100rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp105.000', 'basePrice': 100000},
-    {'title': '200rb', 'badge': '30 hari', 'subtitle': '', 'price': 'Rp210.000', 'basePrice': 200000},
+  // Daftar Nominal Pulsa Telkomsel (8 Pilihan)
+  final List<Map<String, dynamic>> _pulsaItems = [
+    {'title': '15.000', 'badge': '', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp16.500', 'basePrice': 16500},
+    {'title': '25.000', 'badge': '', 'subtitle': 'Masa aktif 30 hari', 'price': 'Rp26.500', 'basePrice': 26500},
+    {'title': '50.000', 'badge': '', 'subtitle': 'Masa aktif 45 hari', 'price': 'Rp50.500', 'basePrice': 50500},
+    {'title': '100.000', 'badge': '', 'subtitle': 'Masa aktif 60 hari', 'price': 'Rp99.000', 'basePrice': 99000},
+    {'title': '150.000', 'badge': '', 'subtitle': 'Masa aktif 75 hari', 'price': 'Rp148.500', 'basePrice': 148500},
+    {'title': '200.000', 'badge': '', 'subtitle': 'Masa aktif 90 hari', 'price': 'Rp198.000', 'basePrice': 198000},
+    {'title': '300.000', 'badge': '', 'subtitle': 'Masa aktif 120 hari', 'price': 'Rp297.000', 'basePrice': 297000},
+    {'title': '500.000', 'badge': '', 'subtitle': 'Masa aktif 150 hari', 'price': 'Rp495.000', 'basePrice': 495000},
   ];
 
-  // 8 Item Kuota / Paket Data Persis Desain Figma
-  final List<Map<String, dynamic>> _kuotaItems = const [
-    {'title': '10rb', 'badge': '3 GB', 'subtitle': 'Berlaku untuk 3 hari', 'price': 'Rp12.500', 'basePrice': 12500},
-    {'title': '20rb', 'badge': '8 GB', 'subtitle': 'Berlaku untuk 7 hari', 'price': 'Rp25.500', 'basePrice': 25500},
-    {'title': '30rb', 'badge': '12 GB', 'subtitle': 'Berlaku untuk 14 hari', 'price': 'Rp31.000', 'basePrice': 31000},
+  // Daftar Paket Data Kuota Telkomsel (8 Pilihan)
+  final List<Map<String, dynamic>> _kuotaItems = [
+    {'title': '50rb', 'badge': '14 GB', 'subtitle': 'Berlaku untuk 30 hari', 'price': 'Rp52.000', 'basePrice': 52000},
+    {'title': '50rb', 'badge': '15 GB', 'subtitle': 'Berlaku untuk 7 hari', 'price': 'Rp51.500', 'basePrice': 51500},
+    {'title': '35rb', 'badge': '5 GB', 'subtitle': 'Berlaku untuk 7 hari', 'price': 'Rp37.000', 'basePrice': 37000},
     {'title': '50rb', 'badge': '15 GB', 'subtitle': 'Berlaku untuk 7 hari', 'price': 'Rp51.500', 'basePrice': 51500},
     {'title': '30rb', 'badge': '12 GB', 'subtitle': 'Berlaku untuk 14 hari', 'price': 'Rp31.000', 'basePrice': 31000},
     {'title': '50rb', 'badge': '15 GB', 'subtitle': 'Berlaku untuk 7 hari', 'price': 'Rp51.500', 'basePrice': 51500},
@@ -1127,16 +1133,119 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
   @override
   void initState() {
     super.initState();
+    _currentPhone = widget.phoneNumber;
     _selectedTab = widget.initialTab;
+    HardwareKeyboard.instance.addHandler(_handleHardwareKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
+    super.dispose();
+  }
+
+  bool _handleHardwareKey(KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return false;
+    final key = event.logicalKey;
+    final char = event.character;
+
+    if (key == LogicalKeyboardKey.backspace || key == LogicalKeyboardKey.delete) {
+      _onKeypadDelete();
+      return true;
+    }
+    if (char != null && RegExp(r'^[0-9]$').hasMatch(char)) {
+      if (!_isKeypadOpen) {
+        setState(() => _isKeypadOpen = true);
+      }
+      _onKeypadDigit(char);
+      return true;
+    }
+    if (key == LogicalKeyboardKey.escape || key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.numpadEnter) {
+      if (_isKeypadOpen) {
+        setState(() => _isKeypadOpen = false);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void _onKeypadDigit(String digit) {
+    if (_currentPhone.length >= 16) return;
+    HapticFeedback.lightImpact();
+    setState(() {
+      _currentPhone += digit;
+    });
+  }
+
+  void _onKeypadDelete() {
+    HapticFeedback.lightImpact();
+    if (_currentPhone.isNotEmpty) {
+      setState(() {
+        _currentPhone = _currentPhone.substring(0, _currentPhone.length - 1);
+      });
+    }
+  }
+
+  Widget _buildKeypadButton(String label, {VoidCallback? onTap, Widget? customChild}) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: InkWell(
+          onTap: onTap ?? () => _onKeypadDigit(label),
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x18000000),
+                  blurRadius: 3,
+                  offset: Offset(0, 1.5),
+                ),
+              ],
+            ),
+            child: Center(
+              child: customChild ??
+                  Text(
+                    label,
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1C0823),
+                    ),
+                  ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _onSelectItem(Map<String, dynamic> item) {
+    if (_currentPhone.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Silakan masukkan nomor handphone terlebih dahulu',
+            style: GoogleFonts.robotoSlab(),
+          ),
+          backgroundColor: const Color(0xFF52086B),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
     HapticFeedback.mediumImpact();
+    setState(() => _isKeypadOpen = false);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => PulsaKonfirmasiScreen(
-          phoneNumber: widget.phoneNumber,
+          phoneNumber: _currentPhone,
           isKuota: _selectedTab == 1,
           title: item['title'] as String,
           badge: item['badge'] as String,
@@ -1152,200 +1261,338 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
   Widget build(BuildContext context) {
     final currentItems = _selectedTab == 0 ? _pulsaItems : _kuotaItems;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD373FC),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF52086B), size: 28),
-          onPressed: () => Navigator.pop(context),
-        ),
-        titleSpacing: 0,
-        title: Text(
-          'Pulsa & Paket Data',
-          style: GoogleFonts.robotoSlab(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF52086B),
+    return PopScope(
+      canPop: !_isKeypadOpen,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_isKeypadOpen) {
+          setState(() => _isKeypadOpen = false);
+          return;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFD373FC),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF52086B), size: 28),
+            onPressed: () {
+              if (_isKeypadOpen) {
+                setState(() => _isKeypadOpen = false);
+                return;
+              }
+              Navigator.pop(context);
+            },
           ),
-        ),
-        centerTitle: false,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 18),
-            child: Center(
-              child: CustomPaint(
-                size: Size(26, 26),
-                painter: _PhoneWifiIconPainter(),
-              ),
+          titleSpacing: 0,
+          title: Text(
+            'Pulsa & Paket Data',
+            style: GoogleFonts.robotoSlab(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF52086B),
             ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Label "Nomor Handphone"
-            Text(
-              'Nomor Handphone',
-              style: GoogleFonts.robotoSlab(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF1C0823),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Card Nomor Handphone dengan Logo Telkomsel, Clear Icon & Icon Contact (Persis Figma)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFD0D0D0), width: 1.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x08000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 1.5),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  _buildTelkomselLogo(size: 30),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      widget.phoneNumber,
-                      style: GoogleFonts.robotoSlab(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF000000),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                  const _ClearXCircleIcon(size: 19),
-                  const SizedBox(width: 10),
-                  _buildContactBookIcon(width: 22, height: 24),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            // Tab Switcher: Pulsa | Paket Data (Persis Desain Figma)
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 1.0,
-                    color: const Color(0xFFE0E0E0),
-                  ),
+          centerTitle: false,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: 18),
+              child: Center(
+                child: CustomPaint(
+                  size: Size(26, 26),
+                  painter: _PhoneWifiIconPainter(),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => setState(() => _selectedTab = 0),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Pulsa',
-                              style: GoogleFonts.robotoSlab(
-                                fontSize: 17,
-                                fontWeight: _selectedTab == 0 ? FontWeight.bold : FontWeight.w500,
-                                color: _selectedTab == 0 ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              width: 52,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                color: _selectedTab == 0 ? const Color(0xFFCA31FF) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => setState(() => _selectedTab = 1),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Paket Data',
-                              style: GoogleFonts.robotoSlab(
-                                fontSize: 17,
-                                fontWeight: _selectedTab == 1 ? FontWeight.bold : FontWeight.w500,
-                                color: _selectedTab == 1 ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              width: 86,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                color: _selectedTab == 1 ? const Color(0xFFCA31FF) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: _isKeypadOpen
+            ? Container(
+                padding: const EdgeInsets.fromLTRB(14, 8, 14, 16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD9D9D9),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x18000000),
+                      blurRadius: 6,
+                      offset: Offset(0, -2),
                     ),
                   ],
                 ),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          _buildKeypadButton('1'),
+                          _buildKeypadButton('2'),
+                          _buildKeypadButton('3'),
+                          _buildKeypadButton('-', onTap: () => _onKeypadDigit('-')),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildKeypadButton('4'),
+                          _buildKeypadButton('5'),
+                          _buildKeypadButton('6'),
+                          _buildKeypadButton(
+                            '_',
+                            onTap: _onKeypadDelete,
+                            customChild: const Icon(Icons.remove, color: Color(0xFF1C0823), size: 22),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildKeypadButton('7'),
+                          _buildKeypadButton('8'),
+                          _buildKeypadButton('9'),
+                          _buildKeypadButton(
+                            '⌫',
+                            onTap: _onKeypadDelete,
+                            customChild: const Icon(Icons.backspace_outlined, color: Color(0xFF1C0823), size: 20),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildKeypadButton(',', onTap: () => _onKeypadDigit(',')),
+                          _buildKeypadButton('0'),
+                          _buildKeypadButton('.', onTap: () => _onKeypadDigit('.')),
+                          _buildKeypadButton(
+                            '✓',
+                            onTap: () => setState(() => _isKeypadOpen = false),
+                            customChild: const Icon(Icons.check, color: Color(0xFF1C0823), size: 24),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : null,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            if (_isKeypadOpen) {
+              setState(() => _isKeypadOpen = false);
+            }
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Label "Nomor Handphone"
+                Text(
+                  'Nomor Handphone',
+                  style: GoogleFonts.robotoSlab(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1C0823),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Card Nomor Handphone dengan Logo Telkomsel (Kotak Abu-Abu Interaktif & Bisa Diedit)
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    setState(() {
+                      _isKeypadOpen = !_isKeypadOpen;
+                    });
+                  },
+                  child: Container(
+                    height: 56,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFAEADAD), // Retangle abu-abu persis permintaan user
+                      borderRadius: BorderRadius.circular(10),
+                      border: _isKeypadOpen
+                          ? Border.all(color: const Color(0xFF52086B), width: 2)
+                          : null,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x0C000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 1.5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        _buildTelkomselLogo(size: 30),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  _currentPhone.isEmpty ? 'Masukan Nomor Handphone' : _currentPhone,
+                                  style: GoogleFonts.robotoSlab(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: _currentPhone.isEmpty
+                                        ? const Color(0xFF4A4A4A)
+                                        : const Color(0xFF000000),
+                                    letterSpacing: 0.5,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (_isKeypadOpen)
+                                Container(
+                                  width: 2,
+                                  height: 20,
+                                  margin: const EdgeInsets.only(left: 3),
+                                  color: const Color(0xFF52086B),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (_currentPhone.isNotEmpty)
+                          GestureDetector(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              setState(() {
+                                _currentPhone = '';
+                              });
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              child: Icon(Icons.cancel, color: Color(0xFF52086B), size: 19),
+                            ),
+                          ),
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            setState(() {
+                              _currentPhone = '085189898989';
+                              _isKeypadOpen = true;
+                            });
+                          },
+                          child: _buildContactBookIcon(width: 22, height: 24),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                // Tab Switcher: Pulsa | Paket Data (Persis Desain Figma)
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 1.0,
+                        color: const Color(0xFFE0E0E0),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => setState(() => _selectedTab = 0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Pulsa',
+                                  style: GoogleFonts.robotoSlab(
+                                    fontSize: 17,
+                                    fontWeight: _selectedTab == 0 ? FontWeight.bold : FontWeight.w500,
+                                    color: _selectedTab == 0 ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  width: 52,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    color: _selectedTab == 0 ? const Color(0xFFCA31FF) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => setState(() => _selectedTab = 1),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Paket Data',
+                                  style: GoogleFonts.robotoSlab(
+                                    fontSize: 17,
+                                    fontWeight: _selectedTab == 1 ? FontWeight.bold : FontWeight.w500,
+                                    color: _selectedTab == 1 ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  width: 86,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    color: _selectedTab == 1 ? const Color(0xFFCA31FF) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 18),
+
+                // Label "Pilih Nominal"
+                Text(
+                  'Pilih Nominal',
+                  style: GoogleFonts.robotoSlab(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 8 Card Nominal 2-Kolom dengan Animasi Sentuh Interaktif
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: currentItems.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 153 / 110, // Layout W153 H110 persis Figma
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = currentItems[index];
+                    return _PulsaInteractiveCard(
+                      item: item,
+                      isKuota: _selectedTab == 1,
+                      onTap: () => _onSelectItem(item),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 24),
               ],
             ),
-
-            const SizedBox(height: 18),
-
-            // Label "Pilih Nominal"
-            Text(
-              'Pilih Nominal',
-              style: GoogleFonts.robotoSlab(
-                fontSize: 15.5,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF000000),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // 8 Card Nominal 2-Kolom dengan Animasi Sentuh Interaktif
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: currentItems.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 153 / 110, // Layout W153 H110 persis Figma
-              ),
-              itemBuilder: (context, index) {
-                final item = currentItems[index];
-                return _PulsaInteractiveCard(
-                  item: item,
-                  isKuota: _selectedTab == 1,
-                  onTap: () => _onSelectItem(item),
-                );
-              },
-            ),
-
-            const SizedBox(height: 24),
-          ],
+          ),
         ),
       ),
     );
