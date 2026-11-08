@@ -175,7 +175,9 @@ class _BerandaScreenState extends State<BerandaScreen> {
                           });
                         },
                         child: Icon(
-                          _isBalanceVisible ? Icons.visibility : Icons.visibility_off,
+                          _isBalanceVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Colors.white,
                           size: 19 * scale,
                         ),
@@ -255,7 +257,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const TransferScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) => const TransferScreen()),
                                   ),
                                 ),
                               ),
@@ -264,7 +267,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const TopUpScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) => const TopUpScreen()),
                                   ),
                                 ),
                               ),
@@ -273,7 +277,9 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const PpobScreen(initialTab: 0)),
                                   ),
                                 ),
                               ),
@@ -282,7 +288,9 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 1)),
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const PpobScreen(initialTab: 1)),
                                   ),
                                 ),
                               ),
@@ -298,7 +306,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const EwalletScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) => const EwalletScreen()),
                                   ),
                                 ),
                               ),
@@ -307,7 +316,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const GoldScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) => const GoldScreen()),
                                   ),
                                 ),
                               ),
@@ -316,7 +326,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const GameScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) => const GameScreen()),
                                   ),
                                 ),
                               ),
@@ -325,7 +336,9 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const DaftarMenuScreen()),
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const DaftarMenuScreen()),
                                   ),
                                 ),
                               ),
@@ -358,7 +371,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                     if (index == 0) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
+                        MaterialPageRoute(
+                            builder: (_) => const PpobScreen(initialTab: 0)),
                       );
                     }
                   },
@@ -415,7 +429,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
-      color: const Color(0xFFF3D8FF), // Warna ungu mengisi penuh sampai dasar layar
+      color: const Color(
+          0xFFF3D8FF), // Warna ungu mengisi penuh sampai dasar layar
       child: Padding(
         padding: EdgeInsets.only(bottom: bottomPadding),
         child: SizedBox(

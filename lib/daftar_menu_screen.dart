@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'transfer_screen.dart';
 import 'topup_screen.dart';
 import 'ppob_screen.dart';
@@ -237,22 +237,24 @@ class DaftarMenuScreen extends StatelessWidget {
                             ),
 
                             // 3. ISI SALDO (Indomaret & Alfamart)
+                            // Indomaret
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (235 / 634),
+                              top: cardHeight * (300 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (48 / 634),
+                              height: cardHeight * (50 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TopUpScreen()),
                               ),
                             ),
 
+                            // Alfamart
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (235 / 634),
+                              top: cardHeight * (300 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (48 / 634),
+                              height: cardHeight * (50 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const TopUpScreen()),
@@ -262,9 +264,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // 4. PULSA & KUOTA (Telkomsel)
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (310 / 634),
+                              top: cardHeight * (385 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (45 / 634),
+                              height: cardHeight * (50 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 0)),
@@ -275,9 +277,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // Mobile Legends Bang Bang
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (395 / 634),
+                              top: cardHeight * (465 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (45 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GameScreen()),
@@ -287,9 +289,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // Free Fire
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (395 / 634),
+                              top: cardHeight * (465 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (45 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GameScreen()),
@@ -299,9 +301,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // PUBG Mobile
                             _buildTapBox(
                               left: cardWidth * (15 / 304),
-                              top: cardHeight * (448 / 634),
+                              top: cardHeight * (510 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (45 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GameScreen()),
@@ -311,9 +313,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // Roblox
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (448 / 634),
+                              top: cardHeight * (510 / 634),
                               width: cardWidth * (135 / 304),
-                              height: cardHeight * (50 / 634),
+                              height: cardHeight * (45 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GameScreen()),
@@ -323,10 +325,10 @@ class DaftarMenuScreen extends StatelessWidget {
                             // 6. BELI EMAS & LISTRIK
                             // EMAS
                             _buildTapBox(
-                              left: cardWidth * (35 / 304),
-                              top: cardHeight * (535 / 634),
-                              width: cardWidth * (110 / 304),
-                              height: cardHeight * (55 / 634),
+                              left: cardWidth * (25 / 304),
+                              top: cardHeight * (575 / 634),
+                              width: cardWidth * (125 / 304),
+                              height: cardHeight * (50 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const GoldScreen()),
@@ -336,9 +338,9 @@ class DaftarMenuScreen extends StatelessWidget {
                             // LISTRIK
                             _buildTapBox(
                               left: cardWidth * (155 / 304),
-                              top: cardHeight * (535 / 634),
-                              width: cardWidth * (110 / 304),
-                              height: cardHeight * (55 / 634),
+                              top: cardHeight * (575 / 634),
+                              width: cardWidth * (125 / 304),
+                              height: cardHeight * (50 / 634),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => const PpobScreen(initialTab: 1)),
