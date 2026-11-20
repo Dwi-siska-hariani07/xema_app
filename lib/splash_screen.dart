@@ -13,6 +13,8 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
+  Timer? _timer;
+  bool _hasNavigated = false;
 
   @override
   void initState() {
@@ -29,25 +31,30 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Berpindah otomatis ke Onboarding Screen setelah 4.5 detik agar tampilan splash screen terlihat jelas dan elegan
-    Timer(const Duration(milliseconds: 4500), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (_, __, ___) => const OnboardingScreen(),
-            transitionsBuilder: (_, animation, __, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-          ),
-        );
-      }
-    });
+    // Berpindah otomatis ke Onboarding Screen setelah 3 detik
+    _timer = Timer(const Duration(milliseconds: 3000), _goToOnboarding);
+  }
+
+  void _goToOnboarding() {
+    if (_hasNavigated || !mounted) return;
+    _hasNavigated = true;
+    _timer?.cancel();
+
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 600),
+        pageBuilder: (_, __, ___) => const OnboardingScreen(),
+        transitionsBuilder: (_, animation, __, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -58,23 +65,27 @@ class _SplashScreenState extends State<SplashScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFFCA31FF), // Warna solid Figma Splash Screen
-      body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: FittedBox(
-          fit: BoxFit.fill,
-          alignment: Alignment.center,
-          child: SizedBox(
-            // Kanvas presisi 1:1 Figma (393 x 852)
-            width: 393,
-            height: 852,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Image.asset(
-                'assets/images/figma_splash_exact.png',
-                width: 393,
-                height: 852,
-                fit: BoxFit.fill,
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _goToOnboarding, // Memungkinkan dosen atau mahasiswa mengetuk layar untuk langsung lanjut tanpa menunggu
+        child: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            alignment: Alignment.center,
+            child: SizedBox(
+              // Kanvas presisi 1:1 Figma (393 x 852)
+              width: 393,
+              height: 852,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Image.asset(
+                  'assets/images/figma_splash_exact.png',
+                  width: 393,
+                  height: 852,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),

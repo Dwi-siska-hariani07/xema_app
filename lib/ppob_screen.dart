@@ -12,6 +12,134 @@ const String _tightPartyPopperBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAFIAAABMCAYAAAD+
 const String _partyPopperBase64 = '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';
 const String _shareFigmaBase64 = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAYAAADo6zjiAAACF0lEQVR4nMVWPWtUQRQ9Zw2xMGIZRLJFkKBNIBgQFAQ7u4CwqVJtk/wCf4617mNtUlkJ6cTK0kZEQdDGIlUI4cgsdzZ3X+Z9hJ3RA8POx925582de+YSCUgaxj7J7/hXkPRQ0sSa7PeVpN1SPumcjwCE1oSKZFWEhaQd98ULJMLYncqoFIGJpKmkjYb1YSRRwvnQNh932IWTUO5TGABYtf5pzo2vQ+DM+qv/hQDJH9bf67AtcwFr8U1eMkkHth4zZQcFdGBiX1lZ+w1gBcChm/f4AOA9ya9ZCHSJEcl9s9kG8BTAc1sKxD6R/IZlCQSk0iylgAmyV5RS0j0ATwDcAbAG4CeALyQ/z/fGknBE5uELRNz8DQAXtb9NSb4NnRDjpWDOTtxUuKSVO51Z6BzC/BtJt0i+Rk64dyMieZ+czW5WAn0lW9JmfFsGKIN3AHxYFuBSd1SKwMu+hgOUw7OO9VnWDAo4vh0dtFzCA+tW2bxK2qrVkslM6Hp3rg1JdyUdpRy6uamROnYE14MNm9IEwCMbnpD8lbBZtzhHxQuP1p+EHHdKdjI/a8/vuEVw8hSruozNfNOEo+3a+MHSjuNxtslnihxyQpcVT5t8jktUxTP0qfndKWUvyyM+ogUuE26iEIHHbYZW3QSc5yTQO77u9geNyAtJGy7/r6RWdvlsIHG/lmov6jpQzDkWiXgVLJP3PYk0Pqc58Rd0kn7IEOgZeQAAAABJRU5ErkJggg==';
 
+
+// ==========================================
+// REVISI DOSEN: LOGIKA DETEKSI OPERATOR SELULER DINAMIS BERDASARKAN PREFIX
+// ==========================================
+class CellularOperator {
+  final String name;
+  final Color primaryColor;
+  final Color accentColor;
+  final String shortCode;
+
+  const CellularOperator({
+    required this.name,
+    required this.primaryColor,
+    required this.accentColor,
+    required this.shortCode,
+  });
+}
+
+CellularOperator detectOperator(String phone) {
+  final clean = phone.replaceAll(RegExp(r'[^0-9]'), '');
+  String norm = clean;
+  if (norm.startsWith('62')) {
+    norm = '0${norm.substring(2)}';
+  } else if (!norm.startsWith('0') && norm.isNotEmpty) {
+    norm = '0$norm';
+  }
+
+  if (norm.length >= 4) {
+    final p4 = norm.substring(0, 4);
+    // Telkomsel: 0811, 0812, 0813, 0821, 0822, 0823, 0851, 0852, 0853
+    if (['0811', '0812', '0813', '0821', '0822', '0823', '0851', '0852', '0853'].contains(p4)) {
+      return const CellularOperator(
+        name: 'Telkomsel',
+        primaryColor: Color(0xFFED0226),
+        accentColor: Color(0xFF001A41),
+        shortCode: 'TSEL',
+      );
+    }
+    // Indosat Ooredoo: 0814, 0815, 0816, 0855, 0856, 0857, 0858
+    if (['0814', '0815', '0816', '0855', '0856', '0857', '0858'].contains(p4)) {
+      return const CellularOperator(
+        name: 'Indosat Ooredoo',
+        primaryColor: Color(0xFFFFC900),
+        accentColor: Color(0xFFE50027),
+        shortCode: 'ISAT',
+      );
+    }
+    // XL Axiata: 0817, 0818, 0819, 0859, 0877, 0878
+    if (['0817', '0818', '0819', '0859', '0877', '0878'].contains(p4)) {
+      return const CellularOperator(
+        name: 'XL Axiata',
+        primaryColor: Color(0xFF002DBB),
+        accentColor: Color(0xFF00A3E0),
+        shortCode: 'XL',
+      );
+    }
+    // Axis: 0831, 0832, 0833, 0838
+    if (['0831', '0832', '0833', '0838'].contains(p4)) {
+      return const CellularOperator(
+        name: 'AXIS',
+        primaryColor: Color(0xFF86008E),
+        accentColor: Color(0xFFF00084),
+        shortCode: 'AXIS',
+      );
+    }
+    // Tri (3): 0895, 0896, 0897, 0898, 0899
+    if (['0895', '0896', '0897', '0898', '0899'].contains(p4)) {
+      return const CellularOperator(
+        name: 'Tri (3)',
+        primaryColor: Color(0xFF000000),
+        accentColor: Color(0xFFF37021),
+        shortCode: '3',
+      );
+    }
+    // Smartfren: 0881, 0882, 0883, 0884, 0885, 0886, 0887, 0888, 0889
+    if (['0881', '0882', '0883', '0884', '0885', '0886', '0887', '0888', '0889'].contains(p4)) {
+      return const CellularOperator(
+        name: 'Smartfren',
+        primaryColor: Color(0xFFE6007E),
+        accentColor: Color(0xFF000000),
+        shortCode: 'SMART',
+      );
+    }
+  }
+
+  // Default saat nomor belum lengkap / belum terdeteksi
+  return const CellularOperator(
+    name: 'Operator Seluler',
+    primaryColor: Color(0xFF52086B),
+    accentColor: Color(0xFFCA31FF),
+    shortCode: 'GSM',
+  );
+}
+
+// Widget Logo Operator Dinamis Berdasarkan Awalan Nomor
+Widget _buildOperatorBadge(String phone, {double size = 30}) {
+  final op = detectOperator(phone);
+  if (op.name == 'Telkomsel') {
+    return _buildTelkomselLogo(size: size);
+  }
+
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: op.primaryColor,
+      shape: BoxShape.circle,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x18000000),
+          blurRadius: 3,
+          offset: Offset(0, 1),
+        ),
+      ],
+    ),
+    alignment: Alignment.center,
+    child: Text(
+      op.shortCode,
+      style: GoogleFonts.poppins(
+        fontSize: size * 0.36,
+        fontWeight: FontWeight.w900,
+        color: Colors.white,
+        letterSpacing: -0.5,
+      ),
+    ),
+  );
+}
+
 const String _telkomselLogoBase64 = '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';
 const String _contactBookIconBase64 = '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';
 
@@ -903,11 +1031,14 @@ class _PulsaInputScreenState extends State<PulsaInputScreen> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
-                              Icons.phone_android_rounded,
-                              color: Color(0xFF1C0823),
-                              size: 22,
-                            ),
+                            if (_phone.isNotEmpty)
+                              _buildOperatorBadge(_phone, size: 24)
+                            else
+                              const Icon(
+                                Icons.phone_android_rounded,
+                                color: Color(0xFF1C0823),
+                                size: 22,
+                              ),
                             const SizedBox(width: 10),
                             // Garis ungu vertikal indikator input:
                             // Hanya tampil jika nomor masih kosong DAN keypad/keyboard sedang aktif dibuka
@@ -1426,7 +1557,7 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
                     ),
                     child: Row(
                       children: [
-                        _buildTelkomselLogo(size: 30),
+                        _buildOperatorBadge(_currentPhone, size: 30),
                         const SizedBox(width: 14),
                         // Garis ungu indikator cursor: hanya muncul jika keypad aktif dan nomor kosong
                         if (_isKeypadOpen && _currentPhone.isEmpty) ...[
@@ -1825,7 +1956,7 @@ class _DashedLinePainter extends CustomPainter {
 // SCREEN 3: KONFIRMASI PULSA / PAKET DATA (Figma: Pulsa 1 & Kuota 1)
 // Card Informasi Pelanggan & Detail Pembayaran Ber-Stroke Halus, Tombol Konfirmasi
 // ==========================================
-class PulsaKonfirmasiScreen extends StatelessWidget {
+class PulsaKonfirmasiScreen extends StatefulWidget {
   final String phoneNumber;
   final bool isKuota;
   final String title;
@@ -1844,6 +1975,22 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
     required this.priceFormatted,
     required this.basePrice,
   });
+
+  @override
+  State<PulsaKonfirmasiScreen> createState() => _PulsaKonfirmasiScreenState();
+}
+
+class _PulsaKonfirmasiScreenState extends State<PulsaKonfirmasiScreen> {
+  // 0 = Saldo Xema Wallet, 1 = Transfer Bank
+  int _paymentMethod = 0;
+  String _selectedBank = 'BCA';
+
+  final List<Map<String, String>> _bankOptions = const [
+    {'name': 'BCA', 'label': 'Bank BCA', 'icon': 'assets/icons/btn_grid_bca.png'},
+    {'name': 'Mandiri', 'label': 'Bank Mandiri', 'icon': 'assets/icons/btn_grid_mandiri.png'},
+    {'name': 'BRI', 'label': 'Bank BRI', 'icon': 'assets/icons/btn_grid_bri.png'},
+    {'name': 'BNI', 'label': 'Bank BNI', 'icon': 'assets/icons/btn_grid_bni.png'},
+  ];
 
   static Widget _buildDetailRow(
     String label,
@@ -1878,8 +2025,9 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const int adminFee = 1500;
-    final int totalPrice = basePrice + adminFee;
-    final String formattedTotal = 'Rp ${totalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    final int totalPrice = widget.basePrice + adminFee;
+    final String formattedTotal = 'Rp ${totalPrice.toString().replaceAllMapped(RegExp(r"(\\d{1,3})(?=(\\d{3})+(?!\\d))"), (Match m) => "${m[1]}.")}';
+    final operator = detectOperator(widget.phoneNumber);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
@@ -1937,7 +2085,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
 
-                          // Card Nomor Handphone dengan Logo Telkomsel, Clear Icon & Icon Contact (Persis Figma)
+                          // Card Nomor Handphone dengan Logo Operator Otomatis
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                             decoration: BoxDecoration(
@@ -1954,11 +2102,11 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                _buildTelkomselLogo(size: 30),
+                                _buildOperatorBadge(widget.phoneNumber, size: 30),
                                 const SizedBox(width: 14),
                                 Expanded(
                                   child: Text(
-                                    phoneNumber,
+                                    widget.phoneNumber,
                                     style: GoogleFonts.robotoSlab(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -1985,7 +2133,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                 right: -16,
                                 child: Container(
                                   height: 1.5,
-                                  color: const Color(0xFFBDBDBD), // Garis lebih terang & jelas persis Figma
+                                  color: const Color(0xFFBDBDBD),
                                 ),
                               ),
                               Row(
@@ -1997,8 +2145,8 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                           'Pulsa',
                                           style: GoogleFonts.robotoSlab(
                                             fontSize: 16.5,
-                                            fontWeight: !isKuota ? FontWeight.bold : FontWeight.w500,
-                                            color: !isKuota ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
+                                            fontWeight: !widget.isKuota ? FontWeight.bold : FontWeight.w500,
+                                            color: !widget.isKuota ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
                                           ),
                                         ),
                                         const SizedBox(height: 6),
@@ -2006,7 +2154,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                           width: 36,
                                           height: 3,
                                           decoration: BoxDecoration(
-                                            color: !isKuota ? const Color(0xFFCA31FF) : Colors.transparent,
+                                            color: !widget.isKuota ? const Color(0xFFCA31FF) : Colors.transparent,
                                             borderRadius: BorderRadius.circular(2),
                                           ),
                                         ),
@@ -2020,8 +2168,8 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                           'Paket Data',
                                           style: GoogleFonts.robotoSlab(
                                             fontSize: 16.5,
-                                            fontWeight: isKuota ? FontWeight.bold : FontWeight.w500,
-                                            color: isKuota ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
+                                            fontWeight: widget.isKuota ? FontWeight.bold : FontWeight.w500,
+                                            color: widget.isKuota ? const Color(0xFF000000) : const Color(0xFF8E8E8E),
                                           ),
                                         ),
                                         const SizedBox(height: 6),
@@ -2029,7 +2177,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                           width: 78,
                                           height: 3,
                                           decoration: BoxDecoration(
-                                            color: isKuota ? const Color(0xFFCA31FF) : Colors.transparent,
+                                            color: widget.isKuota ? const Color(0xFFCA31FF) : Colors.transparent,
                                             borderRadius: BorderRadius.circular(2),
                                           ),
                                         ),
@@ -2074,29 +2222,277 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                   Text(
                                     'Informasi Pelanggan',
                                     style: GoogleFonts.robotoSlab(
-                                      fontSize: 24, // pon Informasi Pelanggan itu 24
+                                      fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF000000),
                                     ),
                                   ),
                                   const SizedBox(height: 32),
-                                  _buildDetailRow('Nomor Ponsel', phoneNumber, fontSize: 16),
+                                  _buildDetailRow('Nomor Ponsel', widget.phoneNumber, fontSize: 16),
                                   const SizedBox(height: 16),
-                                  if (!isKuota) ...[
+                                  _buildDetailRow('Operator', operator.name, fontSize: 16),
+                                  const SizedBox(height: 16),
+                                  if (!widget.isKuota) ...[
                                     _buildDetailRow(
                                       'Nominal Pulsa',
-                                      'Rp ${basePrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                                      'Rp ${widget.basePrice.toString().replaceAllMapped(RegExp(r"(\\d{1,3})(?=(\\d{3})+(?!\\d))"), (Match m) => "${m[1]}.")}',
                                     ),
                                   ] else ...[
-                                    _buildDetailRow('Voucher Telkomsel', badge),
+                                    _buildDetailRow('Voucher ${operator.name}', widget.badge),
                                     const SizedBox(height: 16),
-                                    _buildDetailRow('Masa Aktif', subtitle.isNotEmpty ? subtitle : '30 hari'),
+                                    _buildDetailRow('Masa Aktif', widget.subtitle.isNotEmpty ? widget.subtitle : '30 hari'),
                                   ],
                                 ],
                               ),
                             ),
 
-                            // SOLID GREY DIVIDER LEBAR & ABU-ABU PERSIS FIGMA (Lebar 7px, abu-abu 0xFFD9D9D9, full-width)
+                            // SOLID GREY DIVIDER
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              height: 7.0,
+                              color: const Color(0xFFD9D9D9),
+                            ),
+                            const SizedBox(height: 22),
+
+                            // REVISI DOSEN: METODE PEMBAYARAN
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Metode Pembayaran',
+                                    style: GoogleFonts.robotoSlab(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF000000),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Opsi 1: Saldo / Dompet internal (Xema Wallet)
+                                  InkWell(
+                                    onTap: () {
+                                      HapticFeedback.lightImpact();
+                                      setState(() => _paymentMethod = 0);
+                                    },
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        color: _paymentMethod == 0 ? const Color(0xFFF9E8FF) : Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: _paymentMethod == 0 ? const Color(0xFFCA31FF) : const Color(0xFFE0E0E0),
+                                          width: _paymentMethod == 0 ? 1.8 : 1.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF1C0823),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Image.asset(
+                                                'assets/icons/xema_wallet.png',
+                                                width: 26,
+                                                height: 26,
+                                                errorBuilder: (_, __, ___) => const Icon(
+                                                  Icons.account_balance_wallet_rounded,
+                                                  color: Colors.white,
+                                                  size: 22,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Saldo Xema Wallet',
+                                                  style: GoogleFonts.robotoSlab(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: const Color(0xFF1C0823),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  'Saldo: Rp 1.500.000 (Tersedia)',
+                                                  style: GoogleFonts.robotoSlab(
+                                                    fontSize: 12.5,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: const Color(0xFF2E7D32),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(
+                                            _paymentMethod == 0 ? Icons.radio_button_checked : Icons.radio_button_off,
+                                            color: _paymentMethod == 0 ? const Color(0xFFCA31FF) : const Color(0xFF9E9E9E),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 12),
+
+                                  // Opsi 2: Transfer Bank
+                                  InkWell(
+                                    onTap: () {
+                                      HapticFeedback.lightImpact();
+                                      setState(() => _paymentMethod = 1);
+                                    },
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        color: _paymentMethod == 1 ? const Color(0xFFF9E8FF) : Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: _paymentMethod == 1 ? const Color(0xFFCA31FF) : const Color(0xFFE0E0E0),
+                                          width: _paymentMethod == 1 ? 1.8 : 1.0,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFF52086B),
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                child: const Icon(
+                                                  Icons.account_balance_rounded,
+                                                  color: Colors.white,
+                                                  size: 22,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Transfer Bank (Virtual Account)',
+                                                      style: GoogleFonts.robotoSlab(
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: const Color(0xFF1C0823),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    Text(
+                                                      'Pihak Ketiga / Transfer Otomatis',
+                                                      style: GoogleFonts.robotoSlab(
+                                                        fontSize: 12.5,
+                                                        fontWeight: FontWeight.w500,
+                                                        color: const Color(0xFF666666),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Icon(
+                                                _paymentMethod == 1 ? Icons.radio_button_checked : Icons.radio_button_off,
+                                                color: _paymentMethod == 1 ? const Color(0xFFCA31FF) : const Color(0xFF9E9E9E),
+                                              ),
+                                            ],
+                                          ),
+
+                                          // Pilihan Bank jika Transfer Bank dipilih
+                                          if (_paymentMethod == 1) ...[
+                                            const SizedBox(height: 14),
+                                            const Divider(color: Color(0xFFE0D0EB), thickness: 1),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              'Pilih Bank Tujuan:',
+                                              style: GoogleFonts.robotoSlab(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: const Color(0xFF555555),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: _bankOptions.map((bank) {
+                                                final isBankSelected = _selectedBank == bank['name'];
+                                                return Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      HapticFeedback.lightImpact();
+                                                      setState(() => _selectedBank = bank['name']!);
+                                                    },
+                                                    child: Container(
+                                                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: isBankSelected ? Colors.white : const Color(0xFFF3F3F3),
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        border: Border.all(
+                                                          color: isBankSelected ? const Color(0xFFCA31FF) : const Color(0xFFDDDDDD),
+                                                          width: isBankSelected ? 2.0 : 1.0,
+                                                        ),
+                                                        boxShadow: isBankSelected
+                                                            ? const [
+                                                                BoxShadow(
+                                                                  color: Color(0x30CA31FF),
+                                                                  blurRadius: 6,
+                                                                  offset: Offset(0, 2),
+                                                                ),
+                                                              ]
+                                                            : null,
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Image.asset(
+                                                            bank['icon']!,
+                                                            height: 22,
+                                                            errorBuilder: (_, __, ___) => Text(
+                                                              bank['name']!,
+                                                              style: const TextStyle(fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 4),
+                                                          Text(
+                                                            bank['name']!,
+                                                            style: GoogleFonts.robotoSlab(
+                                                              fontSize: 11,
+                                                              fontWeight: isBankSelected ? FontWeight.bold : FontWeight.w500,
+                                                              color: isBankSelected ? const Color(0xFF52086B) : const Color(0xFF666666),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // SOLID GREY DIVIDER
                             const SizedBox(height: 20),
                             Container(
                               width: double.infinity,
@@ -2121,11 +2517,17 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 24),
                                   _buildDetailRow(
-                                    isKuota ? 'Harga Voucher' : 'Harga Pulsa',
-                                    'Rp ${basePrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                                    widget.isKuota ? 'Harga Voucher' : 'Harga Pulsa',
+                                    'Rp ${widget.basePrice.toString().replaceAllMapped(RegExp(r"(\\d{1,3})(?=(\\d{3})+(?!\\d))"), (Match m) => "${m[1]}.")}',
                                   ),
                                   const SizedBox(height: 14),
                                   _buildDetailRow('Biaya Admin', 'Rp 1.500'),
+                                  const SizedBox(height: 14),
+                                  _buildDetailRow(
+                                    'Metode',
+                                    _paymentMethod == 0 ? 'Saldo Xema Wallet' : 'Transfer Bank $_selectedBank',
+                                    valueWeight: FontWeight.w600,
+                                  ),
                                   const SizedBox(height: 14),
                                   _buildDetailRow('Total Transaksi', formattedTotal),
 
@@ -2138,7 +2540,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                   Text(
                                     'Total Pembayaran',
                                     style: GoogleFonts.robotoSlab(
-                                      fontSize: 24, // pon Total Pembayaran itu 24
+                                      fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF000000),
                                     ),
@@ -2165,12 +2567,13 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => PinPulsaScreen(
-                                              phoneNumber: phoneNumber,
-                                              isKuota: isKuota,
-                                              title: title,
-                                              badge: badge,
-                                              priceFormatted: priceFormatted,
+                                              phoneNumber: widget.phoneNumber,
+                                              isKuota: widget.isKuota,
+                                              title: widget.title,
+                                              badge: widget.badge,
+                                              priceFormatted: widget.priceFormatted,
                                               totalFormatted: formattedTotal,
+                                              paymentMethod: _paymentMethod == 0 ? 'Saldo Xema' : 'Transfer Bank $_selectedBank',
                                             ),
                                           ),
                                         );
@@ -2352,6 +2755,7 @@ class PinPulsaScreen extends StatefulWidget {
   final String badge;
   final String priceFormatted;
   final String totalFormatted;
+  final String paymentMethod;
 
   const PinPulsaScreen({
     super.key,
@@ -2361,6 +2765,7 @@ class PinPulsaScreen extends StatefulWidget {
     required this.badge,
     required this.priceFormatted,
     required this.totalFormatted,
+    this.paymentMethod = 'Saldo Xema',
   });
 
   @override
@@ -2399,6 +2804,7 @@ class _PinPulsaScreenState extends State<PinPulsaScreen> {
           badge: widget.badge,
           priceFormatted: widget.priceFormatted,
           totalFormatted: widget.totalFormatted,
+          paymentMethod: widget.paymentMethod,
         ),
       ),
     );
@@ -2593,6 +2999,7 @@ class BuktiTransaksiPulsaScreen extends StatelessWidget {
   final String badge;
   final String priceFormatted;
   final String totalFormatted;
+  final String paymentMethod;
 
   const BuktiTransaksiPulsaScreen({
     super.key,
@@ -2602,6 +3009,7 @@ class BuktiTransaksiPulsaScreen extends StatelessWidget {
     required this.badge,
     required this.priceFormatted,
     required this.totalFormatted,
+    this.paymentMethod = 'Saldo Xema',
   });
 
   static Widget _buildReceiptRow(String label, String value, {double fontSize = 16}) {
@@ -2780,7 +3188,7 @@ class BuktiTransaksiPulsaScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 36),
-                              _buildReceiptRow('Produk', isKuota ? 'Kuota Telkomsel $badge' : 'Pulsa Telkomsel $title'),
+                              _buildReceiptRow('Produk', isKuota ? 'Kuota ${detectOperator(phoneNumber).name} $badge' : 'Pulsa ${detectOperator(phoneNumber).name} $title'),
                               const SizedBox(height: 8),
                               _buildReceiptRow('SN', '089384756182'),
                               const SizedBox(height: 20),
@@ -2796,6 +3204,8 @@ class BuktiTransaksiPulsaScreen extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(18, 22, 18, 0),
                           child: Column(
                             children: [
+                              _buildReceiptRow('Metode Bayar', paymentMethod),
+                              const SizedBox(height: 8),
                               _buildReceiptRow('Harga', formattedHarga),
                               const SizedBox(height: 8),
                               _buildReceiptRow('Biaya Admin', 'Rp 1.500'),
