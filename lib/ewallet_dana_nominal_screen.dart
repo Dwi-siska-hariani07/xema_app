@@ -38,7 +38,7 @@ class _EwalletDanaNominalScreenState extends State<EwalletDanaNominalScreen> {
   }
 
   void _onCheckmarkTap() {
-    // Sesuai alur permintaan pengguna:
+    // Alur pemilihan nominal transfer:
     // "di bagian gambar ke 2 itu di emulator dia tidak ada button lanjutkan hanya muncul keyboard aja,
     // jika di klik centang di keyboard, keyboard hilang dan button lanjutkan berubah ungu aktif"
     setState(() {

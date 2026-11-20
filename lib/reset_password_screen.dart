@@ -80,6 +80,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: Image.asset(
                     'assets/images/figma_reset_top_right_exact.png',
                     fit: BoxFit.fill,
+                    errorBuilder: (_, __, ___) => const SizedBox(),
                   ),
                 ),
 
@@ -95,6 +96,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: Image.asset(
                     'assets/images/figma_reset_bot_left_exact.png',
                     fit: BoxFit.fill,
+                    errorBuilder: (_, __, ___) => const SizedBox(),
                   ),
                 ),
 
@@ -133,6 +135,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     child: Image.asset(
                       'assets/images/figma_user_exact_computer_illustration.png',
                       width: 220,
+                      errorBuilder: (_, __, ___) => const Icon(Icons.laptop_chromebook_rounded, size: 100, color: Color(0xFF772096)),
                       fit: BoxFit.contain,
                     ),
                   ),

@@ -10,7 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Nilai awal dibuat kosong sesuai permintaan user
+  // Inisialisasi awal profil pengguna
   final TextEditingController _nameController = TextEditingController(text: '');
   final TextEditingController _gmailController = TextEditingController(text: '');
   final TextEditingController _addressController = TextEditingController(text: '');

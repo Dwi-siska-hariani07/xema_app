@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 // =============================================================
-                // 5. ROW: Remember Me & Forgot Pasword? (Figma nodes #30:35..38)
+                // 5. ROW: Remember Me & Forgot Password? (Figma nodes #30:35..38)
                 // Posisi presisi Figma: top: 523
                 // =============================================================
                 Positioned(
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
 
-                      // Forgot Pasword?
+                      // Forgot Password?
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -233,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: Text(
-                          'Forgot Pasword?',
+                          'Forgot Password?',
                           style: GoogleFonts.rasa(
                             fontSize: 18,
                             color: hintPurple,

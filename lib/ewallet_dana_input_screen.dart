@@ -32,8 +32,7 @@ class _EwalletDanaInputScreenState extends State<EwalletDanaInputScreen> {
   }
 
   void _onCheckmarkTap() {
-    // Sesuai logika permintaan pengguna:
-    // "setelah memasukan nomor hp saya klik centang keyboardnya hilang tapi ada tambahkan button lanjutkan seperti gambar ke 3"
+    // Logika tombol lanjut setelah nomor handphone terisi
     setState(() {
       _isKeyboardVisible = false;
     });

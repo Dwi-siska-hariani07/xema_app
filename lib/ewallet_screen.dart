@@ -110,7 +110,7 @@ class _EwalletScreenState extends State<EwalletScreen> {
                             child: const Icon(
                               Icons.arrow_back,
                               size: 26,
-                              color: Color(0xFF52086B), // Warna ungu tua sesuai permintaan
+                              color: Color(0xFF52086B), // Warna ungu tema utama
                             ),
                           ),
                           const SizedBox(width: 14),
@@ -119,7 +119,7 @@ class _EwalletScreenState extends State<EwalletScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF52086B), // Warna ungu tua sesuai permintaan
+                              color: const Color(0xFF52086B), // Warna ungu tema utama
                             ),
                           ),
                         ],

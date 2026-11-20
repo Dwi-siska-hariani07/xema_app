@@ -11,7 +11,7 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  // Controller nomor handphone (dikosongkan secara default sesuai permintaan pengguna)
+  // Controller nomor handphone
   final TextEditingController _phoneController = TextEditingController(text: '');
 
   // State keyboard numerik in-app
@@ -190,7 +190,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 // =============================================================
                 // 6. INPUT NOMOR HANDPHONE (Figma Rectangle 42, node #60:25)
                 // Posisi presisi: top=482, left=18, width=357, height=61, radius=15
-                // Dikosongkan sesuai permintaan user dan membuka keyboard numerik
+                // Input nomor handphone dengan keyboard numerik
                 // =============================================================
                 Positioned(
                   top: 482,

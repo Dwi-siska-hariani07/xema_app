@@ -1411,7 +1411,7 @@ class _PulsaCatalogScreenState extends State<PulsaCatalogScreen> {
                     height: 56,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFAEADAD), // Retangle abu-abu persis permintaan user
+                      color: const Color(0xFFAEADAD), // Container input nomor handphone
                       borderRadius: BorderRadius.circular(10),
                       border: _isKeypadOpen
                           ? Border.all(color: const Color(0xFF52086B), width: 2)
@@ -1691,7 +1691,7 @@ class _PulsaInteractiveCardState extends State<_PulsaInteractiveCard> {
                         child: Text(
                           title,
                           style: GoogleFonts.robotoSlab(
-                            fontSize: 32, // Ukuran title 32 persis permintaan
+                            fontSize: 32, // Ukuran font nominal utama
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF000000),
                             height: 1.0,
@@ -1742,7 +1742,7 @@ class _PulsaInteractiveCardState extends State<_PulsaInteractiveCard> {
                 Text(
                   price,
                   style: GoogleFonts.robotoSlab(
-                    fontSize: 15, // Ukuran font harga 15 persis permintaan
+                    fontSize: 15, // Ukuran font label harga
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF1C0823),
                   ),
@@ -2134,7 +2134,7 @@ class PulsaKonfirmasiScreen extends StatelessWidget {
                                   const _DashedDivider(color: Color(0xFFC0C0C0), height: 1.0, dashWidth: 5.0, dashSpace: 4.0),
                                   const SizedBox(height: 22),
 
-                                  // SECTION 3: TOTAL PEMBAYARAN (Font size 24 persis permintaan)
+                                  // Section total pembayaran
                                   Text(
                                     'Total Pembayaran',
                                     style: GoogleFonts.robotoSlab(

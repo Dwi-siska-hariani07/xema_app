@@ -106,9 +106,25 @@ class _PinScreenState extends State<PinScreen> {
                   left: (393 - 82) / 2,
                   width: 82,
                   height: 82,
-                  child: Image.asset(
-                    'assets/images/figma_pin_key_icon.png',
-                    fit: BoxFit.contain,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E1E1E),
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x18000000),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.vpn_key_rounded,
+                        color: Color(0xFFCA31FF),
+                        size: 40,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -133,7 +149,7 @@ class _PinScreenState extends State<PinScreen> {
                 ),
 
                 // =============================================================
-                // 4. SUBTITLE: "Masukkan 6-digit PIN Trasaksi kamu"
+                // 4. SUBTITLE: "Masukkan 6-digit PIN Transaksi kamu"
                 // =============================================================
                 Positioned(
                   top: 268,
@@ -141,7 +157,7 @@ class _PinScreenState extends State<PinScreen> {
                   right: 0,
                   child: Center(
                     child: Text(
-                      'Masukkan 6-digit PIN Trasaksi kamu',
+                      'Masukkan 6-digit PIN Transaksi kamu',
                       style: GoogleFonts.pochaevsk(
                         fontSize: 14,
                         fontWeight: FontWeight.normal,

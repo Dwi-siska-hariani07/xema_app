@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'splash_screen.dart';
+import 'onboarding_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           primary: const Color(0xFF772096),
         ),
       ),
-      home: const SplashScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }

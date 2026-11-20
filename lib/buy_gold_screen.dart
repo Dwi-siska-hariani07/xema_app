@@ -1556,7 +1556,7 @@ class _BuyGoldScreenState extends State<BuyGoldScreen> {
                           // Kotak Input Abu-abu (#AEADAD)
                           // KLIK 1: Munculkan keyboard 4-kolom otentik (Transfer)
                           // KLIK 2: Sembunyikan keyboard (Responsive Toggle!)
-                          // TIDAK ADA TANDA X / ICON APAPUN DI UJUNG SESUAI PERMINTAAN USER
+                          // Container input nominal emas
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
